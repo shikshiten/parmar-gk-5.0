@@ -169,8 +169,8 @@
 
 ```text
 parmar-5.0/
-├── _headers                     # Cloudflare Pages edge cache & security headers
-├── _redirects                   # Cloudflare Pages SPA rewrite rules
+├── _headers                     # Cloudflare edge cache & security headers
+├── wrangler.jsonc               # Cloudflare Workers Static Assets & SPA configuration
 ├── favicon.png                  # Browser tab favicon (Golden "P" monogram)
 ├── index.html                   # Main dashboard, cinema stage & modal orchestration
 ├── manifest.json                # PWA manifest specification & install shortcuts
