@@ -1,0 +1,10 @@
+# OS and IDE files
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+
+# Local logs
+*.log
+.system_generated/
