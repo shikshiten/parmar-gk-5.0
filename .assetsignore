@@ -2,12 +2,7 @@ node_modules
 .git
 .wrangler
 .dev.vars
-src
 wrangler.toml
-wrangler.jsonc
-package.json
-package-lock.json
 bun.lock
 bun.lockb
-*.bat
-*.md
+package-lock.json

@@ -174,7 +174,7 @@ parmar-5.0/
 ├── push-to-github.bat           # 1-click Windows Git push script with MinGit
 ├── README.md                    # System architecture documentation
 ├── start-server.bat             # 1-click local development HTTP server launcher
-├── wrangler.jsonc               # Cloudflare Workers Static Assets & SPA configuration
+├── wrangler.toml                # Cloudflare Workers Static Assets & SPA configuration
 └── public/                      # Static asset directory served by Cloudflare
     ├── _headers                 # Cloudflare edge cache & security headers
     ├── favicon.png              # Browser tab favicon (Golden "P" monogram)
