@@ -1,4 +1,4 @@
-const CACHE_NAME = 'parmar-gk-5-cache-v2';
+const CACHE_NAME = 'parmar-gk-5-cache-v3';
 const STATIC_ASSETS = [
   './',
   './index.html',
@@ -40,10 +40,15 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
+  // Only handle standard HTTP/HTTPS schemes (ignore chrome-extension://, etc.)
+  if (!event.request.url.startsWith('http://') && !event.request.url.startsWith('https://')) {
+    return;
+  }
+
   const url = new URL(event.request.url);
 
   // Skip caching media streams or heroku proxy calls so they stream cleanly
-  if (url.origin.includes('herokuapp.com') || url.origin.includes('blogspot.com')) {
+  if (url.origin.includes('herokuapp.com') || url.origin.includes('blogspot.com') || url.pathname.includes('/dl/') || url.pathname.includes('/watch/')) {
     return;
   }
 

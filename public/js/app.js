@@ -43,7 +43,12 @@ document.addEventListener('DOMContentLoaded', () => {
     btnToggleCompleteVideo: document.getElementById('btnToggleCompleteVideo'),
     btnPrevVideo: document.getElementById('btnPrevVideo'),
     btnNextVideo: document.getElementById('btnNextVideo'),
-    companionList: document.getElementById('companionList'),
+    // Video Loading Overlay & Fallback Actions
+    videoLoadingNotice: document.getElementById('videoLoadingNotice'),
+    btnFallbackDl: document.getElementById('btnFallbackDl'),
+    btnFallbackVlc: document.getElementById('btnFallbackVlc'),
+    btnFallbackMx: document.getElementById('btnFallbackMx'),
+    btnFallbackWeb: document.getElementById('btnFallbackWeb'),
     // Quiz Modal
     quizModal: document.getElementById('quizModal'),
     quizModalClose: document.getElementById('quizModalClose'),
@@ -51,11 +56,13 @@ document.addEventListener('DOMContentLoaded', () => {
     quizIframe: document.getElementById('quizIframe'),
     btnDownloadQuiz: document.getElementById('btnDownloadQuiz'),
     btnOpenQuizTab: document.getElementById('btnOpenQuizTab'),
-    // WhatsApp Channel Modal
+    // WhatsApp Channel Modal & Triggers
     whatsappModal: document.getElementById('whatsappModal'),
     whatsappModalClose: document.getElementById('whatsappModalClose'),
     btnJoinWhatsapp: document.getElementById('btnJoinWhatsapp'),
     btnAlreadyJoinedWhatsapp: document.getElementById('btnAlreadyJoinedWhatsapp'),
+    btnHeaderWhatsapp: document.getElementById('btnHeaderWhatsapp'),
+    floatingWhatsappBtn: document.getElementById('floatingWhatsappBtn'),
     // PWA & Alerts
     btnInstallHeader: document.getElementById('btnInstallHeader'),
     offlineBanner: document.getElementById('offlineBanner'),
@@ -347,6 +354,19 @@ document.addEventListener('DOMContentLoaded', () => {
   // =========================================================================
   // CINEMA PLAYER (Pure HTML5 Video Player)
   // =========================================================================
+  function showVideoLoading(show, title = 'The video is loading, please have patience', subtitle = 'Connecting to high-speed proxy stream. It may take 5 to 15 seconds to buffer.') {
+    if (!elements.videoLoadingNotice) return;
+    if (show) {
+      const t = elements.videoLoadingNotice.querySelector('.loading-notice-title');
+      const s = elements.videoLoadingNotice.querySelector('.loading-notice-subtitle');
+      if (t) t.textContent = title;
+      if (s) s.textContent = subtitle;
+      elements.videoLoadingNotice.classList.add('active');
+    } else {
+      elements.videoLoadingNotice.classList.remove('active');
+    }
+  }
+
   function openCinemaPlayer(videoItem) {
     state.currentVideoItem = videoItem;
     localStorage.setItem('parmar_gk_last_watched', videoItem.id);
@@ -360,8 +380,17 @@ document.addEventListener('DOMContentLoaded', () => {
     elements.btnPlayVlc.href = videoItem.vlcUrl;
     elements.btnPlayMx.href = videoItem.mxPlayerUrl;
 
+    if (elements.btnFallbackDl) elements.btnFallbackDl.href = videoItem.smartProxyDl;
+    if (elements.btnFallbackVlc) elements.btnFallbackVlc.href = videoItem.vlcUrl;
+    if (elements.btnFallbackMx) elements.btnFallbackMx.href = videoItem.mxPlayerUrl;
+    if (elements.btnFallbackWeb) elements.btnFallbackWeb.href = videoItem.streamUrl || videoItem.smartProxyWatch || videoItem.smartProxyDl;
+
     updateModalCompleteButton();
     renderPlayerCompanionMaterials(videoItem);
+
+    // Prompt loading state notice
+    showVideoLoading(true, 'The video is loading, please have patience', 'Connecting to high-speed proxy stream. It may take 5 to 15 seconds to buffer.');
+    showToast('The video is loading, please have patience', 3500);
 
     // Direct HTML5 Video Stream
     elements.videoNative.src = videoItem.smartProxyDl;
@@ -438,6 +467,26 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.style.overflow = '';
     elements.videoNative.pause();
     elements.videoNative.src = '';
+    showVideoLoading(false);
+  }
+
+  // Native Video Player Event Listeners (Loading, Buffering, Errors)
+  if (elements.videoNative) {
+    elements.videoNative.addEventListener('loadstart', () => {
+      showVideoLoading(true);
+    });
+    elements.videoNative.addEventListener('waiting', () => {
+      showVideoLoading(true, 'The video is loading, please have patience', 'Buffering high-speed proxy stream. Please wait a moment.');
+    });
+    elements.videoNative.addEventListener('canplay', () => {
+      showVideoLoading(false);
+    });
+    elements.videoNative.addEventListener('playing', () => {
+      showVideoLoading(false);
+    });
+    elements.videoNative.addEventListener('error', () => {
+      showVideoLoading(true, 'Video stream requires direct playback', 'The proxy stream is taking longer or requires direct playback. Click below to download or stream in VLC / MX Player.');
+    });
   }
 
   function navigateVideo(direction) {
@@ -551,6 +600,8 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   elements.whatsappModalClose?.addEventListener('click', closeWhatsappModal);
+  elements.btnHeaderWhatsapp?.addEventListener('click', openWhatsappModal);
+  elements.floatingWhatsappBtn?.addEventListener('click', openWhatsappModal);
 
   // Modal Closers
   elements.videoModalClose?.addEventListener('click', closeCinemaPlayer);
@@ -567,10 +618,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Trigger WhatsApp channel popup on visit
-  const isWaDismissed = sessionStorage.getItem('parmar_gk_wa_dismissed');
-  if (!isWaDismissed) {
-    setTimeout(openWhatsappModal, 800);
-  }
+  setTimeout(openWhatsappModal, 600);
 
   // Mobile Bottom Navigation Tabs (Lectures, Videos, PDFs, Quizzes)
   document.querySelectorAll('.mobile-nav-item').forEach(tab => {
