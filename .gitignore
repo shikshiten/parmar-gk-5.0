@@ -8,3 +8,5 @@ desktop.ini
 # Local logs
 *.log
 .system_generated/
+.wrangler/
+node_modules/
