@@ -169,30 +169,29 @@
 
 ```text
 parmar-5.0/
-├── _headers                     # Cloudflare edge cache & security headers
-├── wrangler.jsonc               # Cloudflare Workers Static Assets & SPA configuration
-├── favicon.png                  # Browser tab favicon (Golden "P" monogram)
-├── index.html                   # Main dashboard, cinema stage & modal orchestration
-├── manifest.json                # PWA manifest specification & install shortcuts
+├── .assetsignore                # Asset exclusions (ignores node_modules, git, configs)
+├── package.json                 # Worker deployment scripts & dependencies
 ├── push-to-github.bat           # 1-click Windows Git push script with MinGit
 ├── README.md                    # System architecture documentation
 ├── start-server.bat             # 1-click local development HTTP server launcher
-├── sw.js                        # Service Worker v2 for offline app shell caching
-├── assets/
-│   ├── course-thumbnail.jpg     # Fallback offline course thumbnail
-│   ├── logo.png                 # 512x512 HD golden "P" monogram logo
-│   └── icons/
-│       ├── apple-touch-icon.png # iOS home screen icon (180x180)
-│       ├── icon-192.png         # PWA standard icon (192x192)
-│       ├── icon-512.png         # PWA high-res icon (512x512)
-│       └── icon-maskable.png    # Android adaptive maskable icon (512x512)
-├── css/
-│   └── style.css                # Design tokens, cyber yellow palette, layout & responsive rules
-├── data/
-│   ├── course-data.js           # ES module dataset (6 lectures, 22 resources)
-│   └── course-data.json         # Raw JSON course catalog data
-└── js/
-    └── app.js                   # Player controllers, progress tracking, modals & PWA logic
+├── wrangler.jsonc               # Cloudflare Workers Static Assets & SPA configuration
+└── public/                      # Static asset directory served by Cloudflare
+    ├── _headers                 # Cloudflare edge cache & security headers
+    ├── favicon.png              # Browser tab favicon (Golden "P" monogram)
+    ├── index.html               # Main dashboard, cinema stage & modal orchestration
+    ├── manifest.json            # PWA manifest specification & install shortcuts
+    ├── sw.js                    # Service Worker v2 for offline app shell caching
+    ├── assets/
+    │   ├── course-thumbnail.jpg # Fallback offline course thumbnail
+    │   ├── logo.png             # 512x512 HD golden "P" monogram logo
+    │   └── icons/               # PWA icons (192, 512, maskable, apple-touch)
+    ├── css/
+    │   └── style.css            # Design tokens, cyber yellow palette & responsive rules
+    ├── data/
+    │   ├── course-data.js       # ES module dataset (6 lectures, 22 resources)
+    │   └── course-data.json     # Raw JSON course catalog data
+    └── js/
+        └── app.js               # Player controllers, progress tracking & modals
 ```
 
 ---

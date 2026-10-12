@@ -10,3 +10,4 @@ desktop.ini
 .system_generated/
 .wrangler/
 node_modules/
+dist/

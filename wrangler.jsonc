@@ -1,12 +1,12 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "parmar-gk-5-0",
+  "name": "mafiaparmargk5",
   "compatibility_date": "2026-10-06",
   "observability": {
     "enabled": true
   },
   "assets": {
-    "directory": ".",
+    "directory": "./public",
     "not_found_handling": "single-page-application"
   }
 }
