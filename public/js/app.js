@@ -37,7 +37,6 @@ document.addEventListener('DOMContentLoaded', () => {
     videoModalTitle: document.getElementById('videoModalTitle'),
     playerLectureTitle: document.getElementById('playerLectureTitle'),
     playerMetaDetails: document.getElementById('playerMetaDetails'),
-    btnOpenVidmoly: document.getElementById('btnOpenVidmoly'),
     btnToggleCompleteVideo: document.getElementById('btnToggleCompleteVideo'),
     btnPrevVideo: document.getElementById('btnPrevVideo'),
     btnNextVideo: document.getElementById('btnNextVideo'),
@@ -260,9 +259,6 @@ document.addEventListener('DOMContentLoaded', () => {
         <button class="btn-action-primary" data-play-video="${item.id}">
           ${icons.play} Watch
         </button>
-        <a href="${item.directUrl || item.embedUrl}" target="_blank" rel="noopener noreferrer" class="btn-action-outline" title="Open Video on Vidmoly">
-          Vidmoly
-        </a>
       `;
     } else if (item.type === 'pdf') {
       icon = icons.pdf;
@@ -358,11 +354,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     if (elements.playerMetaDetails) {
       elements.playerMetaDetails.textContent = `${videoItem.sourceId} • ${videoItem.lectureTopic}`;
-    }
-
-    // Action Links
-    if (elements.btnOpenVidmoly) {
-      elements.btnOpenVidmoly.href = videoItem.directUrl || videoItem.embedUrl;
     }
 
     updateModalCompleteButton();
