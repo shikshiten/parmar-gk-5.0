@@ -1,4 +1,4 @@
-const CACHE_NAME = 'parmar-gk-5-cache-v7';
+const CACHE_NAME = 'parmar-gk-5-cache-v8';
 const STATIC_ASSETS = [
   './',
   './index.html',

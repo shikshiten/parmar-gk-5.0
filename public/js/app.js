@@ -30,20 +30,10 @@ document.addEventListener('DOMContentLoaded', () => {
     headerSearchInput: document.getElementById('headerSearchInput'),
     mobileSearchInput: document.getElementById('mobileSearchInput'),
     contentContainer: document.getElementById('contentContainer'),
-    // Cinema Player Modal & Controls
+    // Cinema Player Modal
     videoModal: document.getElementById('videoModal'),
     videoModalClose: document.getElementById('videoModalClose'),
-    videoNative: document.getElementById('videoNative'),
     videoIframe: document.getElementById('videoIframe'),
-    seekLeftZone: document.getElementById('seekLeftZone'),
-    seekRightZone: document.getElementById('seekRightZone'),
-    seekLeftBadge: document.getElementById('seekLeftBadge'),
-    seekRightBadge: document.getElementById('seekRightBadge'),
-    playerControlsBar: document.getElementById('playerControlsBar'),
-    speedButtons: document.querySelectorAll('.speed-pill-btn[data-speed]'),
-    videoQualitySelect: document.getElementById('videoQualitySelect'),
-    btnSeekMinus10: document.getElementById('btnSeekMinus10'),
-    btnSeekPlus10: document.getElementById('btnSeekPlus10'),
     videoModalTitle: document.getElementById('videoModalTitle'),
     playerLectureTitle: document.getElementById('playerLectureTitle'),
     playerMetaDetails: document.getElementById('playerMetaDetails'),
@@ -350,104 +340,9 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // =========================================================================
-  // CINEMA PLAYER (HLS Native Player, Double-Tap Seek, Speed & Quality Engine)
+  // CINEMA PLAYER (Embedded Video Player)
   // =========================================================================
-  let hlsInstance = null;
-  let activeSpeed = 1.0;
-  let lastTapLeft = 0;
-  let lastTapRight = 0;
-
-  function seekRelative(seconds) {
-    if (!elements.videoNative) return;
-    const cur = elements.videoNative.currentTime || 0;
-    const dur = elements.videoNative.duration || 999999;
-    const target = Math.max(0, Math.min(dur, cur + seconds));
-    elements.videoNative.currentTime = target;
-
-    if (seconds < 0 && elements.seekLeftBadge) {
-      elements.seekLeftBadge.classList.add('active-ripple');
-      setTimeout(() => elements.seekLeftBadge.classList.remove('active-ripple'), 450);
-      showToast('Rewound 10s', 1200);
-    } else if (seconds > 0 && elements.seekRightBadge) {
-      elements.seekRightBadge.classList.add('active-ripple');
-      setTimeout(() => elements.seekRightBadge.classList.remove('active-ripple'), 450);
-      showToast('Forwarded 10s', 1200);
-    }
-  }
-
-  // Setup Double-Tap & Double-Click Seeking
-  elements.seekLeftZone?.addEventListener('touchstart', (e) => {
-    const now = Date.now();
-    if (now - lastTapLeft < 320) {
-      e.preventDefault();
-      seekRelative(-10);
-      lastTapLeft = 0;
-    } else {
-      lastTapLeft = now;
-    }
-  }, { passive: false });
-
-  elements.seekRightZone?.addEventListener('touchstart', (e) => {
-    const now = Date.now();
-    if (now - lastTapRight < 320) {
-      e.preventDefault();
-      seekRelative(10);
-      lastTapRight = 0;
-    } else {
-      lastTapRight = now;
-    }
-  }, { passive: false });
-
-  elements.seekLeftZone?.addEventListener('dblclick', (e) => {
-    e.preventDefault();
-    seekRelative(-10);
-  });
-
-  elements.seekRightZone?.addEventListener('dblclick', (e) => {
-    e.preventDefault();
-    seekRelative(10);
-  });
-
-  // Toolbar Quick Seek Buttons
-  elements.btnSeekMinus10?.addEventListener('click', () => seekRelative(-10));
-  elements.btnSeekPlus10?.addEventListener('click', () => seekRelative(10));
-
-  // Speed Buttons Listener
-  function setPlaybackSpeed(speed) {
-    activeSpeed = speed;
-    if (elements.videoNative) {
-      elements.videoNative.playbackRate = speed;
-    }
-    elements.speedButtons.forEach(btn => {
-      btn.classList.toggle('active', parseFloat(btn.dataset.speed) === speed);
-    });
-    showToast(`Speed: ${speed}x`, 1200);
-  }
-
-  elements.speedButtons.forEach(btn => {
-    btn.addEventListener('click', () => {
-      const spd = parseFloat(btn.dataset.speed);
-      if (!isNaN(spd)) setPlaybackSpeed(spd);
-    });
-  });
-
-  // Video Quality Dropdown Listener
-  elements.videoQualitySelect?.addEventListener('change', (e) => {
-    const val = parseInt(e.target.value, 10);
-    if (!hlsInstance) return;
-
-    if (val === -1) {
-      hlsInstance.currentLevel = -1; // Auto level
-      showToast('Quality: Auto (Best)', 1500);
-    } else if (!isNaN(val)) {
-      hlsInstance.currentLevel = val;
-      const lvl = hlsInstance.levels[val];
-      const res = lvl ? `${lvl.height}p` : 'Selected';
-      showToast(`Quality: ${res}`, 1500);
-    }
-  });
-
-  async function openCinemaPlayer(videoItem) {
+  function openCinemaPlayer(videoItem) {
     state.currentVideoItem = videoItem;
     localStorage.setItem('parmar_gk_last_watched', videoItem.id);
 
@@ -464,109 +359,15 @@ document.addEventListener('DOMContentLoaded', () => {
     updateModalCompleteButton();
     renderPlayerCompanionMaterials(videoItem);
 
-    // Reset Player Display
-    if (elements.videoNative) {
-      elements.videoNative.style.display = 'block';
-      elements.videoNative.currentTime = 0;
-      elements.videoNative.playbackRate = activeSpeed;
-    }
+    // Set embedded player src
     if (elements.videoIframe) {
-      elements.videoIframe.style.display = 'none';
-      elements.videoIframe.src = '';
+      elements.videoIframe.src = videoItem.embedUrl;
     }
 
     // Open Cinema Modal Stage
     elements.videoModal.classList.add('active');
     document.body.style.overflow = 'hidden';
-
-    // Destroy prior HLS instance
-    if (hlsInstance) {
-      hlsInstance.destroy();
-      hlsInstance = null;
-    }
-
-    showToast(`Loading Lecture ${videoItem.lectureNumber}...`, 2000);
-
-    // Fetch HLS stream URL from Cloudflare Worker dynamic resolver
-    try {
-      const res = await fetch(`/api/stream?code=${videoItem.fileCode}`);
-      const data = await res.json();
-
-      if (data && data.success && data.streamUrl) {
-        initStreamPlayer(data.streamUrl);
-        return;
-      }
-      throw new Error(data.error || 'Stream URL unavailable');
-    } catch (err) {
-      console.warn('Native HLS stream resolver error, falling back to embedded player:', err);
-      // Failover to embedded player
-      if (elements.videoNative) elements.videoNative.style.display = 'none';
-      if (elements.videoIframe) {
-        elements.videoIframe.style.display = 'block';
-        elements.videoIframe.src = videoItem.embedUrl;
-      }
-    }
-  }
-
-  function initStreamPlayer(streamUrl) {
-    const video = elements.videoNative;
-    if (!video) return;
-
-    if (window.Hls && Hls.isSupported()) {
-      hlsInstance = new Hls({
-        capLevelToPlayerSize: true,
-        enableWorker: true
-      });
-
-      hlsInstance.loadSource(streamUrl);
-      hlsInstance.attachMedia(video);
-
-      hlsInstance.on(Hls.Events.MANIFEST_PARSED, (event, data) => {
-        // Populate available video qualities
-        if (elements.videoQualitySelect && data.levels && data.levels.length > 0) {
-          elements.videoQualitySelect.innerHTML = `<option value="-1">Auto (Best)</option>` +
-            data.levels.map((l, idx) => `<option value="${idx}">${l.height}p</option>`).join('');
-          elements.videoQualitySelect.value = '-1';
-        }
-        video.playbackRate = activeSpeed;
-        video.play().catch(() => {});
-      });
-
-      hlsInstance.on(Hls.Events.ERROR, (event, data) => {
-        if (data.fatal) {
-          switch (data.type) {
-            case Hls.ErrorTypes.NETWORK_ERROR:
-              hlsInstance.startLoad();
-              break;
-            case Hls.ErrorTypes.MEDIA_ERROR:
-              hlsInstance.recoverMediaError();
-              break;
-            default:
-              hlsInstance.destroy();
-              if (video) video.style.display = 'none';
-              if (elements.videoIframe && state.currentVideoItem) {
-                elements.videoIframe.style.display = 'block';
-                elements.videoIframe.src = state.currentVideoItem.embedUrl;
-              }
-              break;
-          }
-        }
-      });
-    } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-      // Native Safari/iOS support
-      video.src = streamUrl;
-      video.addEventListener('loadedmetadata', () => {
-        video.playbackRate = activeSpeed;
-        video.play().catch(() => {});
-      }, { once: true });
-    } else {
-      // Fallback
-      if (video) video.style.display = 'none';
-      if (elements.videoIframe && state.currentVideoItem) {
-        elements.videoIframe.style.display = 'block';
-        elements.videoIframe.src = state.currentVideoItem.embedUrl;
-      }
-    }
+    showToast(`Loaded Lecture ${videoItem.lectureNumber}`, 2000);
   }
 
   function renderPlayerCompanionMaterials(videoItem) {
@@ -625,15 +426,6 @@ document.addEventListener('DOMContentLoaded', () => {
   function closeCinemaPlayer() {
     elements.videoModal.classList.remove('active');
     document.body.style.overflow = '';
-    if (elements.videoNative) {
-      elements.videoNative.pause();
-      elements.videoNative.removeAttribute('src');
-      elements.videoNative.load();
-    }
-    if (hlsInstance) {
-      hlsInstance.destroy();
-      hlsInstance = null;
-    }
     if (elements.videoIframe) {
       elements.videoIframe.src = '';
     }
