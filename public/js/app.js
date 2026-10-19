@@ -368,6 +368,11 @@ document.addEventListener('DOMContentLoaded', () => {
     elements.videoModal.classList.add('active');
     document.body.style.overflow = 'hidden';
     showToast(`Loaded Lecture ${videoItem.lectureNumber}`, 2000);
+
+    // Mobile gesture back navigation support
+    try {
+      history.pushState({ modalOpen: true, modalType: 'video' }, '');
+    } catch (e) {}
   }
 
   function renderPlayerCompanionMaterials(videoItem) {
@@ -423,11 +428,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }).join('');
   }
 
-  function closeCinemaPlayer() {
+  function closeCinemaPlayer(isHistoryBack = false) {
+    if (!elements.videoModal || !elements.videoModal.classList.contains('active')) return;
     elements.videoModal.classList.remove('active');
     document.body.style.overflow = '';
     if (elements.videoIframe) {
       elements.videoIframe.src = '';
+    }
+    if (!isHistoryBack && history.state && history.state.modalOpen) {
+      try { history.back(); } catch (e) {}
     }
   }
 
@@ -626,6 +635,17 @@ document.addEventListener('DOMContentLoaded', () => {
         else if (modal === elements.whatsappModal && !isWaGateActive) closeWhatsappModal();
       }
     });
+  });
+
+  // Mobile Back Button / Swipe-to-back Gesture Support
+  window.addEventListener('popstate', () => {
+    if (elements.videoModal && elements.videoModal.classList.contains('active')) {
+      closeCinemaPlayer(true);
+    } else if (elements.quizModal && elements.quizModal.classList.contains('active')) {
+      closeQuizModal();
+    } else if (elements.whatsappModal && elements.whatsappModal.classList.contains('active') && !isWaGateActive) {
+      closeWhatsappModal();
+    }
   });
 
   // Check entrance gate on initial visit (requires clicking Join Channel and returning)
