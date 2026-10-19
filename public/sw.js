@@ -1,4 +1,4 @@
-const CACHE_NAME = 'parmar-gk-5-cache-v4';
+const CACHE_NAME = 'parmar-gk-5-cache-v5';
 const STATIC_ASSETS = [
   './',
   './index.html',
@@ -47,8 +47,8 @@ self.addEventListener('fetch', (event) => {
 
   const url = new URL(event.request.url);
 
-  // Skip caching media streams or heroku proxy calls so they stream cleanly
-  if (url.origin.includes('herokuapp.com') || url.origin.includes('blogspot.com') || url.pathname.includes('/dl/') || url.pathname.includes('/watch/')) {
+  // Skip caching media streams, Vidmoly embeds or external hosting
+  if (url.origin.includes('vidmoly') || url.origin.includes('catbox') || url.origin.includes('herokuapp.com') || url.origin.includes('blogspot.com') || url.pathname.includes('/dl/') || url.pathname.includes('/watch/')) {
     return;
   }
 

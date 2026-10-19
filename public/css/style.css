@@ -986,9 +986,10 @@ input, textarea, select {
   overflow: hidden;
 }
 
-.video-native-player {
+.video-native-player, .video-iframe-player {
   width: 100%;
   height: 100%;
+  border: none;
   background: #000;
   display: block;
 }
@@ -1448,155 +1449,17 @@ input, textarea, select {
   border-radius: var(--radius-sm);
 }
 /* ==========================================================================
-   MODAL: VIDEO WAITING REMINDER POP-UP (Dedicated Dialog)
+   VIDMOLY HIGH-SPEED EMBEDDED PLAYER
    ========================================================================== */
-.video-loading-modal-overlay {
-  z-index: 1200;
-}
-
-.video-loading-modal-container {
-  max-width: 480px;
-  background: var(--bg-surface);
-  border: 1px solid var(--yellow-border);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.95), 0 0 30px rgba(255, 200, 0, 0.25);
-  animation: modalPopIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-@keyframes modalPopIn {
-  from {
-    transform: scale(0.92);
-    opacity: 0;
-  }
-  to {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
-
-.video-loading-badge {
-  font-size: 0.72rem;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  color: #000;
-  background: var(--yellow-primary);
-  padding: 0.2rem 0.55rem;
-  border-radius: var(--radius-xs);
-  display: inline-block;
-}
-
-.video-loading-modal-body {
-  padding: 1.75rem 1.25rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-}
-
-.loading-spinner-ring {
-  width: 52px;
-  height: 52px;
-  border: 4px solid rgba(255, 200, 0, 0.18);
-  border-top-color: var(--yellow-primary);
-  border-radius: 50%;
-  animation: spinRing 0.85s linear infinite;
-  margin-bottom: 1.15rem;
-}
-
-@keyframes spinRing {
-  to { transform: rotate(360deg); }
-}
-
-.video-loading-title {
-  font-size: 1.2rem;
-  font-weight: 800;
-  color: #FFF;
-  margin-bottom: 0.5rem;
-  line-height: 1.3;
-}
-
-.video-loading-desc {
-  font-size: 0.85rem;
-  color: var(--text-muted);
-  line-height: 1.5;
-  margin-bottom: 1.25rem;
-  max-width: 400px;
-}
-
-.video-loading-status-bar {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  background: rgba(255, 200, 0, 0.08);
-  border: 1px solid rgba(255, 200, 0, 0.25);
-  padding: 0.45rem 0.95rem;
-  border-radius: 9999px;
-  font-size: 0.76rem;
-  font-weight: 600;
-  color: var(--yellow-primary);
-  margin-bottom: 1.5rem;
-}
-
-.status-pulse-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--yellow-primary);
-  box-shadow: 0 0 8px var(--yellow-primary);
-  animation: pulseDot 1.4s ease-in-out infinite;
-}
-
-@keyframes pulseDot {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.4; transform: scale(0.8); }
-}
-
-.video-loading-modal-actions {
+.video-iframe-player {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-.video-loading-quick-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  justify-content: center;
-  width: 100%;
-}
-
-.btn-modal-link {
-  flex: 1;
-  min-width: 110px;
-  padding: 0.5rem 0.75rem;
-  border-radius: var(--radius-sm);
-  background: var(--bg-surface-elevated);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  color: var(--text-secondary);
-  font-size: 0.76rem;
-  font-weight: 600;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  transition: var(--transition);
-}
-
-.btn-modal-link:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: #FFF;
-  border-color: rgba(255, 255, 255, 0.25);
-}
-
-.btn-modal-link.primary {
-  background: rgba(255, 200, 0, 0.15);
-  border-color: rgba(255, 200, 0, 0.4);
-  color: var(--yellow-primary);
-}
-
-.btn-modal-link.primary:hover {
-  background: var(--yellow-primary);
-  color: #000;
+  height: 100%;
+  border: none;
+  background: #000;
+  display: block;
 }
 
 /* ==========================================================================

@@ -30,28 +30,18 @@ document.addEventListener('DOMContentLoaded', () => {
     headerSearchInput: document.getElementById('headerSearchInput'),
     mobileSearchInput: document.getElementById('mobileSearchInput'),
     contentContainer: document.getElementById('contentContainer'),
-    // Cinema Player Modal (HTML5 Only)
+    // Cinema Player Modal (Vidmoly Embed Player)
     videoModal: document.getElementById('videoModal'),
     videoModalClose: document.getElementById('videoModalClose'),
-    videoNative: document.getElementById('videoNative'),
-    nativeControlsBar: document.getElementById('nativeControlsBar'),
+    videoIframe: document.getElementById('videoIframe'),
     videoModalTitle: document.getElementById('videoModalTitle'),
     playerLectureTitle: document.getElementById('playerLectureTitle'),
     playerMetaDetails: document.getElementById('playerMetaDetails'),
-    btnDownloadVideo: document.getElementById('btnDownloadVideo'),
-    btnPlayVlc: document.getElementById('btnPlayVlc'),
-    btnPlayMx: document.getElementById('btnPlayMx'),
+    btnOpenVidmoly: document.getElementById('btnOpenVidmoly'),
     btnToggleCompleteVideo: document.getElementById('btnToggleCompleteVideo'),
     btnPrevVideo: document.getElementById('btnPrevVideo'),
     btnNextVideo: document.getElementById('btnNextVideo'),
     companionList: document.getElementById('companionList'),
-    // Video Loading Pop-up Modal & Fallbacks
-    videoLoadingModal: document.getElementById('videoLoadingModal'),
-    videoLoadingModalClose: document.getElementById('videoLoadingModalClose'),
-    btnDismissVideoLoading: document.getElementById('btnDismissVideoLoading'),
-    modalFallbackDl: document.getElementById('modalFallbackDl'),
-    modalFallbackVlc: document.getElementById('modalFallbackVlc'),
-    modalFallbackMx: document.getElementById('modalFallbackMx'),
     // Quiz Modal
     quizModal: document.getElementById('quizModal'),
     quizModalClose: document.getElementById('quizModalClose'),
@@ -270,27 +260,24 @@ document.addEventListener('DOMContentLoaded', () => {
         <button class="btn-action-primary" data-play-video="${item.id}">
           ${icons.play} Watch
         </button>
-        <a href="${item.smartProxyDl}" target="_blank" download class="btn-action-outline" title="Download Video">
-          ${icons.download} Download
-        </a>
-        <a href="${item.vlcUrl}" class="btn-action-outline" title="VLC Player">
-          VLC
+        <a href="${item.directUrl || item.embedUrl}" target="_blank" rel="noopener noreferrer" class="btn-action-outline" title="Open Video on Vidmoly">
+          Vidmoly
         </a>
       `;
     } else if (item.type === 'pdf') {
       icon = icons.pdf;
       actionButtonsHtml = `
-        <a href="${item.smartProxyDl}" target="_blank" download class="btn-action-primary" title="Direct Download Class PDF">
+        <a href="${item.downloadUrl || item.directUrl}" target="_blank" download class="btn-action-primary" title="Direct Download Class PDF">
           ${icons.download} Download PDF
         </a>
       `;
     } else if (item.type === 'quiz') {
       icon = icons.quiz;
       actionButtonsHtml = `
-        <button class="btn-action-primary" data-open-quiz="${item.id}">
-          ${icons.play} Quiz
-        </button>
-        <a href="${item.smartProxyDl}" target="_blank" download class="btn-action-outline" title="Download Quiz HTML">
+        <a href="${item.quizUrl || item.downloadUrl}" target="_blank" rel="noopener noreferrer" class="btn-action-primary" title="Launch Practice Quiz">
+          Take Quiz
+        </a>
+        <a href="${item.downloadUrl || item.quizUrl}" target="_blank" download class="btn-action-outline" title="Download Quiz HTML">
           ${icons.download} Download
         </a>
       `;
@@ -357,61 +344,39 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // =========================================================================
-  // CINEMA PLAYER (Pure HTML5 Video Player) & LOADING POP-UP MODAL
+  // CINEMA PLAYER (Vidmoly High-Speed Embed Player)
   // =========================================================================
-  function openVideoLoadingModal(videoItem) {
-    if (!elements.videoLoadingModal) return;
-    
-    // Wire fallback links inside the dedicated loading popup modal
-    if (elements.modalFallbackDl) elements.modalFallbackDl.href = videoItem.smartProxyDl;
-    if (elements.modalFallbackVlc) elements.modalFallbackVlc.href = videoItem.vlcUrl;
-    if (elements.modalFallbackMx) elements.modalFallbackMx.href = videoItem.mxPlayerUrl;
-
-    const titleEl = document.getElementById('videoLoadingModalTitle');
-    const descEl = document.getElementById('videoLoadingModalDesc');
-    const statusEl = document.getElementById('loadingStatusText');
-
-    if (titleEl) titleEl.textContent = 'The video is loading, please have patience';
-    if (descEl) descEl.textContent = `Connecting to Lecture ${videoItem.lectureNumber} proxy stream. It may take 5 to 15 seconds to buffer the video frames. Please have patience while the stream starts.`;
-    if (statusEl) statusEl.textContent = 'Initializing stream buffer...';
-
-    elements.videoLoadingModal.classList.add('active');
-  }
-
-  function closeVideoLoadingModal() {
-    if (elements.videoLoadingModal) {
-      elements.videoLoadingModal.classList.remove('active');
-    }
-  }
-
   function openCinemaPlayer(videoItem) {
     state.currentVideoItem = videoItem;
     localStorage.setItem('parmar_gk_last_watched', videoItem.id);
 
-    elements.videoModalTitle.textContent = `Lecture ${videoItem.lectureNumber}`;
-    elements.playerLectureTitle.textContent = videoItem.title;
-    elements.playerMetaDetails.textContent = `${videoItem.sourceId} • ${videoItem.lectureTopic}`;
+    if (elements.videoModalTitle) {
+      elements.videoModalTitle.textContent = `Lecture ${videoItem.lectureNumber}`;
+    }
+    if (elements.playerLectureTitle) {
+      elements.playerLectureTitle.textContent = videoItem.title;
+    }
+    if (elements.playerMetaDetails) {
+      elements.playerMetaDetails.textContent = `${videoItem.sourceId} • ${videoItem.lectureTopic}`;
+    }
 
     // Action Links
-    elements.btnDownloadVideo.href = videoItem.smartProxyDl;
-    elements.btnPlayVlc.href = videoItem.vlcUrl;
-    elements.btnPlayMx.href = videoItem.mxPlayerUrl;
+    if (elements.btnOpenVidmoly) {
+      elements.btnOpenVidmoly.href = videoItem.directUrl || videoItem.embedUrl;
+    }
 
     updateModalCompleteButton();
     renderPlayerCompanionMaterials(videoItem);
 
-    // Open Main Cinema Stage
+    // Set Vidmoly Embed Stream into Iframe
+    if (elements.videoIframe) {
+      elements.videoIframe.src = videoItem.embedUrl;
+    }
+
+    // Open Cinema Modal Stage
     elements.videoModal.classList.add('active');
     document.body.style.overflow = 'hidden';
-
-    // Open Dedicated Loading Pop-up Modal on top
-    openVideoLoadingModal(videoItem);
-    showToast('The video is loading, please have patience', 3500);
-
-    // Direct HTML5 Video Stream
-    elements.videoNative.src = videoItem.smartProxyDl;
-    elements.videoNative.load();
-    elements.videoNative.play().catch(() => {});
+    showToast(`Loaded Lecture ${videoItem.lectureNumber}`, 2000);
   }
 
   function renderPlayerCompanionMaterials(videoItem) {
@@ -439,7 +404,7 @@ document.addEventListener('DOMContentLoaded', () => {
               </span>
             </div>
             <div class="companion-actions">
-              <a href="${s.smartProxyDl}" target="_blank" download class="btn-player-mini primary" title="Download PDF">
+              <a href="${s.downloadUrl || s.directUrl}" target="_blank" download class="btn-player-mini primary" title="Download PDF">
                 ${icons.download} Download PDF
               </a>
             </div>
@@ -456,8 +421,8 @@ document.addEventListener('DOMContentLoaded', () => {
               </span>
             </div>
             <div class="companion-actions">
-              <button class="btn-player-mini primary" data-companion-open-quiz="${s.id}">Quiz</button>
-              <a href="${s.smartProxyDl}" target="_blank" download class="btn-player-mini" title="Download">
+              <a href="${s.quizUrl || s.downloadUrl}" target="_blank" class="btn-player-mini primary">Quiz</a>
+              <a href="${s.downloadUrl || s.quizUrl}" target="_blank" download class="btn-player-mini" title="Download">
                 ${icons.download}
               </a>
             </div>
@@ -465,49 +430,15 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
       }
     }).join('');
-
-    elements.companionList.querySelectorAll('[data-companion-open-quiz]').forEach(b => {
-      b.addEventListener('click', () => {
-        const id = b.dataset.companionOpenQuiz;
-        const item = state.course.allItems.find(i => i.id === id);
-        if (item) openQuizModal(item);
-      });
-    });
   }
 
   function closeCinemaPlayer() {
     elements.videoModal.classList.remove('active');
-    closeVideoLoadingModal();
     document.body.style.overflow = '';
-    elements.videoNative.pause();
-    elements.videoNative.src = '';
+    if (elements.videoIframe) {
+      elements.videoIframe.src = '';
+    }
   }
-
-  // Native Video Player Event Listeners (Loading, Buffering, Errors)
-  if (elements.videoNative) {
-    elements.videoNative.addEventListener('waiting', () => {
-      showToast('Buffering stream, please wait...', 2000);
-    });
-    elements.videoNative.addEventListener('canplay', () => {
-      closeVideoLoadingModal();
-      showToast('Video ready! Playing Lecture...', 2000);
-    });
-    elements.videoNative.addEventListener('playing', () => {
-      closeVideoLoadingModal();
-    });
-    elements.videoNative.addEventListener('error', () => {
-      if (state.currentVideoItem) {
-        openVideoLoadingModal(state.currentVideoItem);
-        const descEl = document.getElementById('videoLoadingModalDesc');
-        const statusEl = document.getElementById('loadingStatusText');
-        if (descEl) descEl.textContent = 'Proxy stream is taking longer or requires direct playback. Click below to download or stream in VLC / MX Player.';
-        if (statusEl) statusEl.textContent = 'Stream buffer timeout';
-      }
-    });
-  }
-
-  elements.btnDismissVideoLoading?.addEventListener('click', closeVideoLoadingModal);
-  elements.videoLoadingModalClose?.addEventListener('click', closeVideoLoadingModal);
 
   function navigateVideo(direction) {
     const allVideos = state.course.allItems.filter(i => i.type === 'video');
@@ -527,20 +458,19 @@ document.addEventListener('DOMContentLoaded', () => {
   // QUIZ MODAL
   // =========================================================================
   function openQuizModal(item) {
-    elements.quizModalTitle.textContent = item.title;
-    elements.btnDownloadQuiz.href = item.smartProxyDl;
-    elements.btnOpenQuizTab.href = item.smartProxyDl;
-
-    elements.quizIframe.src = item.smartProxyDl;
-
-    elements.quizModal.classList.add('active');
-    document.body.style.overflow = 'hidden';
+    const quizUrl = item.quizUrl || item.downloadUrl || item.directUrl;
+    if (quizUrl) {
+      window.open(quizUrl, '_blank');
+      showToast(`Opening ${item.title}`);
+    }
   }
 
   function closeQuizModal() {
-    elements.quizModal.classList.remove('active');
-    document.body.style.overflow = '';
-    elements.quizIframe.src = '';
+    if (elements.quizModal) {
+      elements.quizModal.classList.remove('active');
+      document.body.style.overflow = '';
+      if (elements.quizIframe) elements.quizIframe.src = '';
+    }
   }
 
   // =========================================================================
@@ -697,12 +627,11 @@ document.addEventListener('DOMContentLoaded', () => {
   elements.videoModalClose?.addEventListener('click', closeCinemaPlayer);
   elements.quizModalClose?.addEventListener('click', closeQuizModal);
 
-  [elements.videoModal, elements.quizModal, elements.whatsappModal, elements.videoLoadingModal].forEach(modal => {
+  [elements.videoModal, elements.quizModal, elements.whatsappModal].forEach(modal => {
     modal?.addEventListener('click', (e) => {
       if (e.target === modal) {
         if (modal === elements.videoModal) closeCinemaPlayer();
         else if (modal === elements.quizModal) closeQuizModal();
-        else if (modal === elements.videoLoadingModal) closeVideoLoadingModal();
         else if (modal === elements.whatsappModal && !isWaGateActive) closeWhatsappModal();
       }
     });

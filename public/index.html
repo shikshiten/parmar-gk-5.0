@@ -114,19 +114,19 @@
           <!-- Highlights Row -->
           <div class="hero-stats-row">
             <div class="stat-box">
-              <span class="stat-number">6</span>
+              <span class="stat-number">10</span>
               <span class="stat-label">Video Lectures</span>
             </div>
             <div class="stat-box">
-              <span class="stat-number">11</span>
+              <span class="stat-number">15</span>
               <span class="stat-label">PDF Class Notes</span>
             </div>
             <div class="stat-box">
-              <span class="stat-number">5</span>
+              <span class="stat-number">10</span>
               <span class="stat-label">Practice Quizzes</span>
             </div>
             <div class="stat-box">
-              <span class="stat-number">22</span>
+              <span class="stat-number">35</span>
               <span class="stat-label">Total Resources</span>
             </div>
           </div>
@@ -143,19 +143,19 @@
         <div class="filter-pills-wrapper">
           <button class="filter-pill active" data-filter="all">
             <span>All</span>
-            <span class="pill-count">22</span>
+            <span class="pill-count">35</span>
           </button>
           <button class="filter-pill" data-filter="video">
             <span>Videos</span>
-            <span class="pill-count">6</span>
+            <span class="pill-count">10</span>
           </button>
           <button class="filter-pill" data-filter="pdf">
             <span>Class PDFs</span>
-            <span class="pill-count">11</span>
+            <span class="pill-count">15</span>
           </button>
           <button class="filter-pill" data-filter="quiz">
             <span>Quizzes</span>
-            <span class="pill-count">5</span>
+            <span class="pill-count">10</span>
           </button>
           <button class="filter-pill" data-filter="completed">
             <span>Completed</span>
@@ -248,32 +248,18 @@
         <button id="videoModalClose" class="modal-close-btn" aria-label="Close Cinema Player">✕</button>
       </div>
 
-      <!-- Video Stage Area (HTML5 Cinema Player Only) -->
+      <!-- Video Stage Area (Vidmoly High-Speed Embed Player) -->
       <div class="video-stage-wrapper">
-        <video 
-          id="videoNative" 
-          class="video-native-player" 
-          controls 
-          playsinline 
-          preload="metadata">
-          Your browser does not support HTML5 video streaming.
-        </video>
-      </div>
-
-      <!-- Speed & Seeking Toolbar -->
-      <div id="nativeControlsBar" class="native-controls-bar">
-        <div class="speed-controls-group">
-          <span class="control-label">Speed:</span>
-          <button onclick="document.getElementById('videoNative').playbackRate = 0.75" class="mode-btn">0.75x</button>
-          <button onclick="document.getElementById('videoNative').playbackRate = 1.0" class="mode-btn active-rate">1x</button>
-          <button onclick="document.getElementById('videoNative').playbackRate = 1.25" class="mode-btn">1.25x</button>
-          <button onclick="document.getElementById('videoNative').playbackRate = 1.5" class="mode-btn">1.5x</button>
-          <button onclick="document.getElementById('videoNative').playbackRate = 2.0" class="mode-btn">2x</button>
-        </div>
-        <div class="seek-controls-group">
-          <button onclick="document.getElementById('videoNative').currentTime -= 10" class="mode-btn">-10s</button>
-          <button onclick="document.getElementById('videoNative').currentTime += 10" class="mode-btn">+10s</button>
-        </div>
+        <iframe 
+          id="videoIframe" 
+          class="video-iframe-player" 
+          src="" 
+          title="Vidmoly Embedded Lecture Player"
+          frameborder="0" 
+          scrolling="no" 
+          allowfullscreen 
+          allow="autoplay; fullscreen; picture-in-picture; encrypted-media">
+        </iframe>
       </div>
 
       <!-- Player Body & Information -->
@@ -290,14 +276,8 @@
             <button id="btnPrevVideo" class="btn-player-mini" title="Previous Lecture">Prev</button>
             <button id="btnNextVideo" class="btn-player-mini" title="Next Lecture">Next</button>
             <button id="btnToggleCompleteVideo" class="btn-player-mini">Mark Complete</button>
-            <a id="btnDownloadVideo" href="#" target="_blank" download class="btn-player-mini primary" title="Download Lecture MP4">
-              <span>Download</span>
-            </a>
-            <a id="btnPlayVlc" href="#" class="btn-player-mini" title="Stream in VLC">
-              <span>VLC</span>
-            </a>
-            <a id="btnPlayMx" href="#" class="btn-player-mini" title="Stream in MX Player">
-              <span>MX Player</span>
+            <a id="btnOpenVidmoly" href="#" target="_blank" rel="noopener noreferrer" class="btn-player-mini primary" title="Open Video on Vidmoly">
+              <span>Watch on Vidmoly</span>
             </a>
           </div>
         </div>
@@ -382,50 +362,6 @@
           <button id="btnAlreadyJoinedWhatsapp" class="btn-whatsapp-dismiss" style="display: none;">
             Already Joined
           </button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- =========================================================================
-       MODAL 4: VIDEO WAITING REMINDER POP-UP (Dedicated Dialog)
-       ========================================================================= -->
-  <div id="videoLoadingModal" class="modal-overlay video-loading-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="videoLoadingModalTitle">
-    <div class="modal-container video-loading-modal-container">
-      <div class="modal-header">
-        <div class="modal-header-title-box">
-          <span class="video-loading-badge">STREAM INITIALIZING</span>
-        </div>
-        <button id="videoLoadingModalClose" class="modal-close-btn" aria-label="Close Notice">✕</button>
-      </div>
-
-      <div class="video-loading-modal-body">
-        <div class="loading-spinner-ring"></div>
-        <h3 id="videoLoadingModalTitle" class="video-loading-title">The video is loading, please have patience</h3>
-        <p id="videoLoadingModalDesc" class="video-loading-desc">
-          Connecting to high-speed proxy stream. It may take 5 to 15 seconds to buffer the video frames. Please have patience while the stream starts.
-        </p>
-
-        <div class="video-loading-status-bar">
-          <span class="status-pulse-dot"></span>
-          <span id="loadingStatusText">Initializing stream buffer...</span>
-        </div>
-
-        <div class="video-loading-modal-actions">
-          <button id="btnDismissVideoLoading" class="btn-action-primary" style="width: 100%;">
-            Wait for Player
-          </button>
-          <div class="video-loading-quick-links">
-            <a id="modalFallbackDl" href="#" target="_blank" download class="btn-modal-link primary">
-              Direct Download MP4
-            </a>
-            <a id="modalFallbackVlc" href="#" class="btn-modal-link">
-              Stream in VLC
-            </a>
-            <a id="modalFallbackMx" href="#" class="btn-modal-link">
-              Stream in MX Player
-            </a>
-          </div>
         </div>
       </div>
     </div>
