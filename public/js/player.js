@@ -742,27 +742,148 @@
   }
 
   /* ------------------------------------------------------------------ */
-  /* Fullscreen & PiP                                                   */
+  /* Fullscreen & Orientation Lock                                      */
   /* ------------------------------------------------------------------ */
 
+  function isDocFullscreen() {
+    return !!(
+      document.fullscreenElement ||
+      document.webkitFullscreenElement ||
+      document.mozFullScreenElement ||
+      document.msFullscreenElement ||
+      (stage && stage.classList.contains('is-fullscreen'))
+    );
+  }
+
+  function isMobileDevice() {
+    return (
+      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile/i.test(navigator.userAgent) ||
+      (window.matchMedia && window.matchMedia('(max-width: 820px)').matches)
+    );
+  }
+
+  function lockLandscape() {
+    try {
+      if (screen.orientation && typeof screen.orientation.lock === 'function') {
+        screen.orientation.lock('landscape').catch(function () {});
+      } else if (screen.lockOrientation) {
+        screen.lockOrientation('landscape');
+      } else if (screen.mozLockOrientation) {
+        screen.mozLockOrientation('landscape');
+      } else if (screen.msLockOrientation) {
+        screen.msLockOrientation('landscape');
+      }
+    } catch (e) {}
+  }
+
+  function unlockOrientation() {
+    try {
+      if (screen.orientation && typeof screen.orientation.unlock === 'function') {
+        screen.orientation.unlock();
+      } else if (screen.unlockOrientation) {
+        screen.unlockOrientation();
+      } else if (screen.mozUnlockOrientation) {
+        screen.mozUnlockOrientation();
+      } else if (screen.msUnlockOrientation) {
+        screen.msUnlockOrientation();
+      }
+    } catch (e) {}
+  }
+
+  function exitFullscreenSafe() {
+    unlockOrientation();
+    try {
+      if (document.exitFullscreen) {
+        document.exitFullscreen().catch(function () {});
+      } else if (document.webkitExitFullscreen) {
+        document.webkitExitFullscreen();
+      } else if (document.mozCancelFullScreen) {
+        document.mozCancelFullScreen();
+      } else if (document.msExitFullscreen) {
+        document.msExitFullscreen();
+      }
+    } catch (e) {}
+    if (stage) stage.classList.remove('is-fullscreen');
+  }
+
   function bindFullscreen() {
-    document.addEventListener('fullscreenchange', function () {
-      const isFull = !!document.fullscreenElement;
-      stage.classList.toggle('is-fullscreen', isFull);
+    const events = ['fullscreenchange', 'webkitfullscreenchange', 'mozfullscreenchange', 'MSFullscreenChange'];
+    events.forEach(function (evt) {
+      document.addEventListener(evt, function () {
+        const isFull = !!(
+          document.fullscreenElement ||
+          document.webkitFullscreenElement ||
+          document.mozFullScreenElement ||
+          document.msFullscreenElement
+        );
+        if (stage) stage.classList.toggle('is-fullscreen', isFull);
+        if (isFull) {
+          if (isMobileDevice()) lockLandscape();
+        } else {
+          unlockOrientation();
+        }
+      });
     });
+
+    if (video) {
+      video.addEventListener('webkitbeginfullscreen', function () {
+        if (stage) stage.classList.add('is-fullscreen');
+      });
+      video.addEventListener('webkitendfullscreen', function () {
+        if (stage) stage.classList.remove('is-fullscreen');
+        unlockOrientation();
+      });
+    }
   }
 
   function toggleFullscreen() {
-    if (document.fullscreenElement) {
-      document.exitFullscreen();
+    if (!stage) return;
+
+    if (isDocFullscreen()) {
+      exitFullscreenSafe();
       return;
     }
-    if (stage.requestFullscreen) {
-      stage.requestFullscreen().catch(function () {
-        if (video.webkitEnterFullscreen) video.webkitEnterFullscreen();
-      });
-    } else if (video.webkitEnterFullscreen) {
-      video.webkitEnterFullscreen();
+
+    const req =
+      stage.requestFullscreen ||
+      stage.webkitRequestFullscreen ||
+      stage.mozRequestFullScreen ||
+      stage.msRequestFullscreen;
+
+    const onEnterFull = function () {
+      if (stage) stage.classList.add('is-fullscreen');
+      if (isMobileDevice()) lockLandscape();
+    };
+
+    if (req) {
+      try {
+        const p = req.call(stage);
+        if (p && typeof p.then === 'function') {
+          p.then(onEnterFull).catch(function () {
+            if (video && video.webkitEnterFullscreen) {
+              try { video.webkitEnterFullscreen(); } catch (e) {}
+            } else {
+              onEnterFull();
+            }
+          });
+        } else {
+          onEnterFull();
+        }
+      } catch (err) {
+        if (video && video.webkitEnterFullscreen) {
+          try { video.webkitEnterFullscreen(); } catch (e) {}
+        } else {
+          onEnterFull();
+        }
+      }
+    } else if (video && video.webkitEnterFullscreen) {
+      try {
+        video.webkitEnterFullscreen();
+      } catch (e) {
+        onEnterFull();
+      }
+    } else {
+      onEnterFull();
     }
   }
 
@@ -1116,6 +1237,7 @@
   }
 
   function close() {
+    exitFullscreenSafe();
     if (!video) return;
     token++;
     savePosition(true);

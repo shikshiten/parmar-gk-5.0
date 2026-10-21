@@ -1576,12 +1576,62 @@ input, textarea, select {
   display: none;
 }
 
+.video-stage-wrapper:fullscreen #cpFullscreen .cp-ic-fs-enter,
+.video-stage-wrapper:-webkit-full-screen #cpFullscreen .cp-ic-fs-enter,
 .video-stage-wrapper.is-fullscreen #cpFullscreen .cp-ic-fs-enter {
   display: none;
 }
 
+.video-stage-wrapper:fullscreen #cpFullscreen .cp-ic-fs-exit,
+.video-stage-wrapper:-webkit-full-screen #cpFullscreen .cp-ic-fs-exit,
 .video-stage-wrapper.is-fullscreen #cpFullscreen .cp-ic-fs-exit {
   display: block;
+}
+
+/* Fullscreen / Orientation Viewport Override */
+.video-stage-wrapper:fullscreen,
+.video-stage-wrapper:-webkit-full-screen,
+.video-stage-wrapper:-moz-full-screen,
+.video-stage-wrapper:-ms-fullscreen {
+  width: 100vw !important;
+  height: 100vh !important;
+  max-width: 100vw !important;
+  max-height: 100vh !important;
+  aspect-ratio: auto !important;
+  border-radius: 0 !important;
+  background: #000 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.video-stage-wrapper.is-fullscreen {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  max-width: 100vw !important;
+  max-height: 100vh !important;
+  aspect-ratio: auto !important;
+  border-radius: 0 !important;
+  z-index: 999999 !important;
+  background: #000 !important;
+  margin: 0 !important;
+}
+
+.video-stage-wrapper.is-fullscreen .video-native-player,
+.video-stage-wrapper:fullscreen .video-native-player,
+.video-stage-wrapper:-webkit-full-screen .video-native-player {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important;
+}
+
+.video-stage-wrapper.is-fullscreen .cp-controls,
+.video-stage-wrapper:fullscreen .cp-controls,
+.video-stage-wrapper:-webkit-full-screen .cp-controls {
+  padding-left: max(16px, env(safe-area-inset-left));
+  padding-right: max(16px, env(safe-area-inset-right));
+  padding-bottom: max(10px, env(safe-area-inset-bottom));
 }
 
 /* Settings menu */
@@ -2324,22 +2374,35 @@ input, textarea, select {
   }
 }
 
-/* 2. Mobile Landscape Video Mode (Immersive when phone rotated) */
-@media (max-height: 520px) and (orientation: landscape) {
+/* 2. Mobile Landscape Video Mode (Immersive when phone rotated or locked landscape) */
+@media (orientation: landscape) and (max-height: 640px) {
   #videoModal .modal-container {
     max-height: 100vh;
-    height: 100%;
+    height: 100vh;
     border-radius: 0;
+    border: none;
+    background: #000;
+  }
+
+  #videoModal .modal-header {
+    display: none;
   }
 
   #videoModal .video-stage-wrapper {
-    height: calc(100vh - 46px);
+    height: 100vh;
     max-height: 100vh;
     aspect-ratio: auto;
+    border-radius: 0;
   }
 
   #videoModal .player-body {
     display: none;
+  }
+
+  .cp-controls {
+    padding-left: max(16px, env(safe-area-inset-left));
+    padding-right: max(16px, env(safe-area-inset-right));
+    padding-bottom: max(8px, env(safe-area-inset-bottom));
   }
 }
 
@@ -2399,68 +2462,163 @@ input, textarea, select {
 
 
 /* ==========================================================================
-   CINEMA PLAYER - MOBILE / TOUCH FINE-TUNING
+   CINEMA PLAYER - MOBILE / TOUCH OPTIMIZATION (SINGLE-ROW CONTROLS)
    ========================================================================== */
 @media (max-width: 640px) {
   .video-stage-wrapper {
-    max-height: 56vh;
+    max-height: 52vh;
   }
 
   #videoModal .video-stage-wrapper {
-    max-height: 56vh;
+    max-height: 52vh;
   }
 
-  .cp-controls {
-    padding: 24px 6px 4px;
-  }
-
-  .cp-row {
-    flex-wrap: wrap;
-    gap: 4px 2px;
-    justify-content: space-between;
-    padding: 0 2px;
-  }
-
-  /* Row 1: Primary playback controls */
-  #cpPlayPause { order: 1; }
-  #cpRewind { order: 2; }
-  #cpForward { order: 3; }
-
-  /* Row 1 continued: Volume & Time */
-  .cp-volume { order: 4; flex: 0 0 auto; }
-  .cp-time { order: 5; margin: 0 4px; font-size: 11px; flex: 0 0 auto; }
-
-  /* Spacer forces line break */
-  .cp-spacer { order: 6; flex: 1 1 100%; height: 0; margin: 0; }
-
-  /* Row 2: Secondary controls */
-  .cp-speed-badge { order: 7; flex: 0 0 auto; margin-right: 0; min-width: 30px; height: 22px; font-size: 10px; }
-  .cp-settings-btn { order: 8; flex: 0 0 auto; padding: 0 6px; }
-  #cpPip { order: 9; flex: 0 0 auto; }
-  #cpFullscreen { order: 10; flex: 0 0 auto; }
-
-  .cp-btn {
-    width: 36px;
-    height: 36px;
-  }
-
-  .cp-volume-slider {
-    display: none;
-  }
-
-  .cp-settings-label {
-    display: none;
+  /* Raise center play button slightly so it never overlaps the bottom row */
+  .cp-center-layer {
+    bottom: 44px;
   }
 
   .cp-big-play {
-    width: 56px;
-    height: 56px;
+    width: 52px;
+    height: 52px;
   }
 
+  .cp-controls {
+    padding: 24px 6px 6px;
+  }
+
+  /* Single row controller - no wrap, no line-breaks */
+  .cp-row {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 3px !important;
+    padding: 0 2px;
+    width: 100%;
+  }
+
+  /* Reset any previous flex orders so elements flow naturally */
+  #cpPlayPause,
+  #cpRewind,
+  #cpForward,
+  .cp-volume,
+  .cp-time,
+  .cp-spacer,
+  .cp-speed-badge,
+  .cp-settings-btn,
+  #cpPip,
+  #cpFullscreen {
+    order: initial !important;
+  }
+
+  /* Primary playback buttons */
+  #cpPlayPause {
+    width: 34px;
+    height: 34px;
+    flex-shrink: 0;
+  }
+
+  #cpRewind,
+  #cpForward {
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
+  }
+
+  #cpRewind svg,
+  #cpForward svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  /* Volume & Mute */
+  .cp-volume {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  #cpMute {
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
+  }
+
+  #cpMute svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .cp-volume-slider {
+    display: none !important;
+  }
+
+  /* Current & duration time */
+  .cp-time {
+    margin: 0 4px;
+    font-size: 11px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    letter-spacing: -0.2px;
+  }
+
+  /* Spacer pushes right controls to the end */
+  .cp-spacer {
+    flex: 1 1 auto !important;
+    min-width: 4px;
+    height: 1px;
+  }
+
+  /* Right-side controls */
+  .cp-speed-badge {
+    min-width: 28px;
+    height: 22px;
+    padding: 0 5px;
+    margin: 0 2px;
+    font-size: 10px;
+    flex-shrink: 0;
+  }
+
+  .cp-settings-btn {
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    flex-shrink: 0;
+    justify-content: center;
+  }
+
+  .cp-settings-btn svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .cp-settings-label {
+    display: none !important;
+  }
+
+  /* Hide PiP on mobile single row to save horizontal space */
+  #cpPip {
+    display: none !important;
+  }
+
+  #cpFullscreen {
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+  }
+
+  #cpFullscreen svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  /* Settings menu popup positioning on mobile */
   .cp-menu {
-    right: 6px;
-    bottom: 52px;
-    width: 236px;
+    right: 8px;
+    bottom: 50px;
+    width: 230px;
+    max-width: calc(100vw - 16px);
   }
 
   .cp-progress {
@@ -2468,27 +2626,40 @@ input, textarea, select {
   }
 
   .cp-seek-ripple {
-    width: 78px;
-    height: 78px;
+    width: 76px;
+    height: 76px;
     font-size: 10px;
   }
 
   .cp-toast {
-    bottom: 72px;
+    bottom: 60px;
   }
 }
 
-@media (max-width: 380px) {
-  #cpPip {
-    display: none;
+/* Extra small mobile screens (e.g. width <= 375px) */
+@media (max-width: 375px) {
+  .cp-volume {
+    display: none !important;
   }
 
-  .cp-speed-badge {
-    display: none;
+  .cp-time {
+    font-size: 10px;
+    margin: 0 2px;
   }
 
   #cpRewind,
   #cpForward {
-    display: none;
+    width: 26px;
+    height: 26px;
+  }
+
+  #cpPlayPause {
+    width: 32px;
+    height: 32px;
+  }
+
+  #cpFullscreen {
+    width: 30px;
+    height: 30px;
   }
 }
