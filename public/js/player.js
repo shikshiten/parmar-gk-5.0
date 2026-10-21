@@ -907,63 +907,51 @@
     return m ? m[1] : null;
   }
 
-  // Attempt client-side direct embed fetch first (CORS allowed by vidmoly.biz / vidmoly.org)
+  // Direct client-side embed resolution (simple CORS request, NO custom headers)
   async function resolveStreamClient(item) {
     const code = extractCode(item);
     if (!code) throw new Error('Missing video code');
 
-    const host = item.embedUrl ? new URL(item.embedUrl).origin : 'https://vidmoly.biz';
-    const controller = new AbortController();
-    const timer = setTimeout(function () { controller.abort(); }, 7000);
+    const hosts = [];
+    if (item.embedUrl) {
+      try {
+        hosts.push(new URL(item.embedUrl).origin);
+      } catch (e) {}
+    }
+    if (!hosts.includes('https://vidmoly.biz')) hosts.push('https://vidmoly.biz');
+    if (!hosts.includes('https://vidmoly.org')) hosts.push('https://vidmoly.org');
 
-    try {
-      const res = await fetch(`${host}/embed-${code}.html`, {
-        signal: controller.signal,
-        headers: { Accept: 'text/html' }
-      });
-      if (!res.ok) throw new Error('Client fetch failed');
-      const html = await res.text();
-      const m = html.match(/file\s*:\s*['"](https?:\/\/[^'"]+\.m3u8[^'"]*)['"]/) ||
-                html.match(/['"](https?:\/\/[^'"]+\/master\.m3u8[^'"]*)['"]/);
-      if (m && m[1]) {
-        const img = html.match(/image\s*:\s*['"]([^'"]+)['"]/);
-        return {
-          streamUrl: m[1].replace(/\\\//g, '/').replace(/&amp;/g, '&'),
-          poster: img ? img[1].replace(/\\\//g, '/') : null
-        };
+    for (const host of hosts) {
+      try {
+        const controller = new AbortController();
+        const timer = setTimeout(function () { controller.abort(); }, 6000);
+
+        // Simple GET request without custom headers (avoids OPTIONS preflight rejection)
+        const res = await fetch(`${host}/embed-${code}.html`, {
+          signal: controller.signal
+        });
+        clearTimeout(timer);
+
+        if (!res.ok) continue;
+        const html = await res.text();
+        const m = html.match(/file\s*:\s*['"](https?:\/\/[^'"]+\.m3u8[^'"]*)['"]/) ||
+                  html.match(/['"](https?:\/\/[^'"]+\/master\.m3u8[^'"]*)['"]/);
+        if (m && m[1]) {
+          const img = html.match(/image\s*:\s*['"]([^'"]+)['"]/);
+          return {
+            streamUrl: m[1].replace(/\\\//g, '/').replace(/&amp;/g, '&'),
+            poster: img ? img[1].replace(/\\\//g, '/') : null
+          };
+        }
+      } catch (err) {
+        // Try next host
       }
-      throw new Error('Stream pattern not found');
-    } finally {
-      clearTimeout(timer);
     }
-  }
-
-  // Worker endpoint fallback
-  async function resolveStreamWorker(item) {
-    const code = extractCode(item);
-    if (!code) throw new Error('Missing video code');
-
-    const controller = new AbortController();
-    const timer = setTimeout(function () { controller.abort(); }, 9000);
-
-    try {
-      const res = await fetch('/api/resolve?code=' + encodeURIComponent(code), {
-        signal: controller.signal,
-        cache: 'no-store'
-      });
-      if (!res.ok) throw new Error('Worker resolve failed');
-      return await res.json();
-    } finally {
-      clearTimeout(timer);
-    }
+    throw new Error('Stream pattern not found');
   }
 
   async function resolveStream(item) {
-    try {
-      return await resolveStreamClient(item);
-    } catch (e1) {
-      return await resolveStreamWorker(item);
-    }
+    return await resolveStreamClient(item);
   }
 
   function destroyHls() {
