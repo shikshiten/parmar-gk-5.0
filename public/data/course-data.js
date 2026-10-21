@@ -6,12 +6,12 @@ const COURSE_DATA = {
   "examTarget": "SSC CGL / CHSL / CPO / MTS / Railways 2026-2027",
   "thumbnailUrl": "https://imgtree.co/direct/NXZNE4_N.jpg",
   "localThumbnail": "assets/course-thumbnail.jpg",
-  "totalItems": 35,
+  "totalItems": 50,
   "stats": {
-    "totalLectures": 10,
-    "videos": 10,
-    "pdfs": 15,
-    "quizzes": 10
+    "totalLectures": 15,
+    "videos": 15,
+    "pdfs": 20,
+    "quizzes": 15
   },
   "lectures": [
     {
@@ -498,6 +498,221 @@ const COURSE_DATA = {
           "directUrl": "https://files.catbox.moe/hkmg0r.html"
         }
       ]
+    },
+    {
+      "lectureNumber": 11,
+      "title": "Lecture 11: Parliamentary System",
+      "topic": "Parliamentary System",
+      "items": [
+        {
+          "id": "036",
+          "title": "Lecture 11: Parliamentary System",
+          "type": "video",
+          "originalType": "Video",
+          "sourceId": "LEC-11",
+          "lectureNumber": 11,
+          "lectureTopic": "Parliamentary System",
+          "fileCode": "NEW_VID_CODE_11",
+          "embedUrl": "https://vidmoly.biz/embed-NEW_VID_CODE_11.html",
+          "directUrl": "https://vidmoly.me/NEW_VID_CODE_11.html",
+          "downloadUrl": "https://vidmoly.me/NEW_VID_CODE_11.html"
+        },
+        {
+          "id": "037",
+          "title": "Parliamentary System - Notes",
+          "type": "pdf",
+          "originalType": "PDF",
+          "sourceId": "PDF-11",
+          "lectureNumber": 11,
+          "lectureTopic": "Parliamentary System",
+          "downloadUrl": "https://files.catbox.moe/placeholder11.pdf",
+          "directUrl": "https://files.catbox.moe/placeholder11.pdf"
+        },
+        {
+          "id": "038",
+          "title": "Parliamentary System - Practice Quiz",
+          "type": "quiz",
+          "originalType": "Quiz (HTML)",
+          "sourceId": "QUIZ-11",
+          "lectureNumber": 11,
+          "lectureTopic": "Parliamentary System",
+          "quizUrl": "https://files.catbox.moe/placeholder11.html",
+          "downloadUrl": "https://files.catbox.moe/placeholder11.html",
+          "directUrl": "https://files.catbox.moe/placeholder11.html"
+        }
+      ]
+    },
+    {
+      "lectureNumber": 12,
+      "title": "Lecture 12: Federalism & Centre-State Relations",
+      "topic": "Federalism & Centre-State Relations",
+      "items": [
+        {
+          "id": "039",
+          "title": "Lecture 12: Federalism & Centre-State Relations",
+          "type": "video",
+          "originalType": "Video",
+          "sourceId": "LEC-12",
+          "lectureNumber": 12,
+          "lectureTopic": "Federalism & Centre-State Relations",
+          "fileCode": "NEW_VID_CODE_12",
+          "embedUrl": "https://vidmoly.biz/embed-NEW_VID_CODE_12.html",
+          "directUrl": "https://vidmoly.me/NEW_VID_CODE_12.html",
+          "downloadUrl": "https://vidmoly.me/NEW_VID_CODE_12.html"
+        },
+        {
+          "id": "040",
+          "title": "Federalism & Centre-State Relations - Notes",
+          "type": "pdf",
+          "originalType": "PDF",
+          "sourceId": "PDF-12",
+          "lectureNumber": 12,
+          "lectureTopic": "Federalism & Centre-State Relations",
+          "downloadUrl": "https://files.catbox.moe/placeholder12.pdf",
+          "directUrl": "https://files.catbox.moe/placeholder12.pdf"
+        },
+        {
+          "id": "041",
+          "title": "Federalism & Centre-State Relations - Practice Quiz",
+          "type": "quiz",
+          "originalType": "Quiz (HTML)",
+          "sourceId": "QUIZ-12",
+          "lectureNumber": 12,
+          "lectureTopic": "Federalism & Centre-State Relations",
+          "quizUrl": "https://files.catbox.moe/placeholder12.html",
+          "downloadUrl": "https://files.catbox.moe/placeholder12.html",
+          "directUrl": "https://files.catbox.moe/placeholder12.html"
+        }
+      ]
+    },
+    {
+      "lectureNumber": 13,
+      "title": "Lecture 13: Emergency Provisions",
+      "topic": "Emergency Provisions",
+      "items": [
+        {
+          "id": "042",
+          "title": "Lecture 13: Emergency Provisions",
+          "type": "video",
+          "originalType": "Video",
+          "sourceId": "LEC-13",
+          "lectureNumber": 13,
+          "lectureTopic": "Emergency Provisions",
+          "fileCode": "NEW_VID_CODE_13",
+          "embedUrl": "https://vidmoly.biz/embed-NEW_VID_CODE_13.html",
+          "directUrl": "https://vidmoly.me/NEW_VID_CODE_13.html",
+          "downloadUrl": "https://vidmoly.me/NEW_VID_CODE_13.html"
+        },
+        {
+          "id": "043",
+          "title": "Emergency Provisions - Notes",
+          "type": "pdf",
+          "originalType": "PDF",
+          "sourceId": "PDF-13",
+          "lectureNumber": 13,
+          "lectureTopic": "Emergency Provisions",
+          "downloadUrl": "https://files.catbox.moe/placeholder13.pdf",
+          "directUrl": "https://files.catbox.moe/placeholder13.pdf"
+        },
+        {
+          "id": "044",
+          "title": "Emergency Provisions - Practice Quiz",
+          "type": "quiz",
+          "originalType": "Quiz (HTML)",
+          "sourceId": "QUIZ-13",
+          "lectureNumber": 13,
+          "lectureTopic": "Emergency Provisions",
+          "quizUrl": "https://files.catbox.moe/placeholder13.html",
+          "downloadUrl": "https://files.catbox.moe/placeholder13.html",
+          "directUrl": "https://files.catbox.moe/placeholder13.html"
+        }
+      ]
+    },
+    {
+      "lectureNumber": 14,
+      "title": "Lecture 14: Constitutional Amendments & Important Schedules",
+      "topic": "Constitutional Amendments & Important Schedules",
+      "items": [
+        {
+          "id": "045",
+          "title": "Lecture 14: Constitutional Amendments & Important Schedules",
+          "type": "video",
+          "originalType": "Video",
+          "sourceId": "LEC-14",
+          "lectureNumber": 14,
+          "lectureTopic": "Constitutional Amendments & Important Schedules",
+          "fileCode": "NEW_VID_CODE_14",
+          "embedUrl": "https://vidmoly.biz/embed-NEW_VID_CODE_14.html",
+          "directUrl": "https://vidmoly.me/NEW_VID_CODE_14.html",
+          "downloadUrl": "https://vidmoly.me/NEW_VID_CODE_14.html"
+        },
+        {
+          "id": "046",
+          "title": "Constitutional Amendments - Notes",
+          "type": "pdf",
+          "originalType": "PDF",
+          "sourceId": "PDF-14",
+          "lectureNumber": 14,
+          "lectureTopic": "Constitutional Amendments & Important Schedules",
+          "downloadUrl": "https://files.catbox.moe/placeholder14.pdf",
+          "directUrl": "https://files.catbox.moe/placeholder14.pdf"
+        },
+        {
+          "id": "047",
+          "title": "Constitutional Amendments - Practice Quiz",
+          "type": "quiz",
+          "originalType": "Quiz (HTML)",
+          "sourceId": "QUIZ-14",
+          "lectureNumber": 14,
+          "lectureTopic": "Constitutional Amendments & Important Schedules",
+          "quizUrl": "https://files.catbox.moe/placeholder14.html",
+          "downloadUrl": "https://files.catbox.moe/placeholder14.html",
+          "directUrl": "https://files.catbox.moe/placeholder14.html"
+        }
+      ]
+    },
+    {
+      "lectureNumber": 15,
+      "title": "Lecture 15: Local Government (Panchayats & Municipalities)",
+      "topic": "Local Government (Panchayats & Municipalities)",
+      "items": [
+        {
+          "id": "048",
+          "title": "Lecture 15: Local Government (Panchayats & Municipalities)",
+          "type": "video",
+          "originalType": "Video",
+          "sourceId": "LEC-15",
+          "lectureNumber": 15,
+          "lectureTopic": "Local Government (Panchayats & Municipalities)",
+          "fileCode": "NEW_VID_CODE_15",
+          "embedUrl": "https://vidmoly.biz/embed-NEW_VID_CODE_15.html",
+          "directUrl": "https://vidmoly.me/NEW_VID_CODE_15.html",
+          "downloadUrl": "https://vidmoly.me/NEW_VID_CODE_15.html"
+        },
+        {
+          "id": "049",
+          "title": "Local Government - Notes",
+          "type": "pdf",
+          "originalType": "PDF",
+          "sourceId": "PDF-15",
+          "lectureNumber": 15,
+          "lectureTopic": "Local Government (Panchayats & Municipalities)",
+          "downloadUrl": "https://files.catbox.moe/placeholder15.pdf",
+          "directUrl": "https://files.catbox.moe/placeholder15.pdf"
+        },
+        {
+          "id": "050",
+          "title": "Local Government - Practice Quiz",
+          "type": "quiz",
+          "originalType": "Quiz (HTML)",
+          "sourceId": "QUIZ-15",
+          "lectureNumber": 15,
+          "lectureTopic": "Local Government (Panchayats & Municipalities)",
+          "quizUrl": "https://files.catbox.moe/placeholder15.html",
+          "downloadUrl": "https://files.catbox.moe/placeholder15.html",
+          "directUrl": "https://files.catbox.moe/placeholder15.html"
+        }
+      ]
     }
   ],
   "allItems": [
@@ -915,10 +1130,186 @@ const COURSE_DATA = {
       "quizUrl": "https://files.catbox.moe/hkmg0r.html",
       "downloadUrl": "https://files.catbox.moe/hkmg0r.html",
       "directUrl": "https://files.catbox.moe/hkmg0r.html"
+    },
+    {
+      "id": "036",
+      "title": "Lecture 11: Parliamentary System",
+      "type": "video",
+      "originalType": "Video",
+      "sourceId": "LEC-11",
+      "lectureNumber": 11,
+      "lectureTopic": "Parliamentary System",
+      "fileCode": "NEW_VID_CODE_11",
+      "embedUrl": "https://vidmoly.biz/embed-NEW_VID_CODE_11.html",
+      "directUrl": "https://vidmoly.me/NEW_VID_CODE_11.html",
+      "downloadUrl": "https://vidmoly.me/NEW_VID_CODE_11.html"
+    },
+    {
+      "id": "037",
+      "title": "Parliamentary System - Notes",
+      "type": "pdf",
+      "originalType": "PDF",
+      "sourceId": "PDF-11",
+      "lectureNumber": 11,
+      "lectureTopic": "Parliamentary System",
+      "downloadUrl": "https://files.catbox.moe/placeholder11.pdf",
+      "directUrl": "https://files.catbox.moe/placeholder11.pdf"
+    },
+    {
+      "id": "038",
+      "title": "Parliamentary System - Practice Quiz",
+      "type": "quiz",
+      "originalType": "Quiz (HTML)",
+      "sourceId": "QUIZ-11",
+      "lectureNumber": 11,
+      "lectureTopic": "Parliamentary System",
+      "quizUrl": "https://files.catbox.moe/placeholder11.html",
+      "downloadUrl": "https://files.catbox.moe/placeholder11.html",
+      "directUrl": "https://files.catbox.moe/placeholder11.html"
+    },
+    {
+      "id": "039",
+      "title": "Lecture 12: Federalism & Centre-State Relations",
+      "type": "video",
+      "originalType": "Video",
+      "sourceId": "LEC-12",
+      "lectureNumber": 12,
+      "lectureTopic": "Federalism & Centre-State Relations",
+      "fileCode": "NEW_VID_CODE_12",
+      "embedUrl": "https://vidmoly.biz/embed-NEW_VID_CODE_12.html",
+      "directUrl": "https://vidmoly.me/NEW_VID_CODE_12.html",
+      "downloadUrl": "https://vidmoly.me/NEW_VID_CODE_12.html"
+    },
+    {
+      "id": "040",
+      "title": "Federalism & Centre-State Relations - Notes",
+      "type": "pdf",
+      "originalType": "PDF",
+      "sourceId": "PDF-12",
+      "lectureNumber": 12,
+      "lectureTopic": "Federalism & Centre-State Relations",
+      "downloadUrl": "https://files.catbox.moe/placeholder12.pdf",
+      "directUrl": "https://files.catbox.moe/placeholder12.pdf"
+    },
+    {
+      "id": "041",
+      "title": "Federalism & Centre-State Relations - Practice Quiz",
+      "type": "quiz",
+      "originalType": "Quiz (HTML)",
+      "sourceId": "QUIZ-12",
+      "lectureNumber": 12,
+      "lectureTopic": "Federalism & Centre-State Relations",
+      "quizUrl": "https://files.catbox.moe/placeholder12.html",
+      "downloadUrl": "https://files.catbox.moe/placeholder12.html",
+      "directUrl": "https://files.catbox.moe/placeholder12.html"
+    },
+    {
+      "id": "042",
+      "title": "Lecture 13: Emergency Provisions",
+      "type": "video",
+      "originalType": "Video",
+      "sourceId": "LEC-13",
+      "lectureNumber": 13,
+      "lectureTopic": "Emergency Provisions",
+      "fileCode": "NEW_VID_CODE_13",
+      "embedUrl": "https://vidmoly.biz/embed-NEW_VID_CODE_13.html",
+      "directUrl": "https://vidmoly.me/NEW_VID_CODE_13.html",
+      "downloadUrl": "https://vidmoly.me/NEW_VID_CODE_13.html"
+    },
+    {
+      "id": "043",
+      "title": "Emergency Provisions - Notes",
+      "type": "pdf",
+      "originalType": "PDF",
+      "sourceId": "PDF-13",
+      "lectureNumber": 13,
+      "lectureTopic": "Emergency Provisions",
+      "downloadUrl": "https://files.catbox.moe/placeholder13.pdf",
+      "directUrl": "https://files.catbox.moe/placeholder13.pdf"
+    },
+    {
+      "id": "044",
+      "title": "Emergency Provisions - Practice Quiz",
+      "type": "quiz",
+      "originalType": "Quiz (HTML)",
+      "sourceId": "QUIZ-13",
+      "lectureNumber": 13,
+      "lectureTopic": "Emergency Provisions",
+      "quizUrl": "https://files.catbox.moe/placeholder13.html",
+      "downloadUrl": "https://files.catbox.moe/placeholder13.html",
+      "directUrl": "https://files.catbox.moe/placeholder13.html"
+    },
+    {
+      "id": "045",
+      "title": "Lecture 14: Constitutional Amendments & Important Schedules",
+      "type": "video",
+      "originalType": "Video",
+      "sourceId": "LEC-14",
+      "lectureNumber": 14,
+      "lectureTopic": "Constitutional Amendments & Important Schedules",
+      "fileCode": "NEW_VID_CODE_14",
+      "embedUrl": "https://vidmoly.biz/embed-NEW_VID_CODE_14.html",
+      "directUrl": "https://vidmoly.me/NEW_VID_CODE_14.html",
+      "downloadUrl": "https://vidmoly.me/NEW_VID_CODE_14.html"
+    },
+    {
+      "id": "046",
+      "title": "Constitutional Amendments - Notes",
+      "type": "pdf",
+      "originalType": "PDF",
+      "sourceId": "PDF-14",
+      "lectureNumber": 14,
+      "lectureTopic": "Constitutional Amendments & Important Schedules",
+      "downloadUrl": "https://files.catbox.moe/placeholder14.pdf",
+      "directUrl": "https://files.catbox.moe/placeholder14.pdf"
+    },
+    {
+      "id": "047",
+      "title": "Constitutional Amendments - Practice Quiz",
+      "type": "quiz",
+      "originalType": "Quiz (HTML)",
+      "sourceId": "QUIZ-14",
+      "lectureNumber": 14,
+      "lectureTopic": "Constitutional Amendments & Important Schedules",
+      "quizUrl": "https://files.catbox.moe/placeholder14.html",
+      "downloadUrl": "https://files.catbox.moe/placeholder14.html",
+      "directUrl": "https://files.catbox.moe/placeholder14.html"
+    },
+    {
+      "id": "048",
+      "title": "Lecture 15: Local Government (Panchayats & Municipalities)",
+      "type": "video",
+      "originalType": "Video",
+      "sourceId": "LEC-15",
+      "lectureNumber": 15,
+      "lectureTopic": "Local Government (Panchayats & Municipalities)",
+      "fileCode": "NEW_VID_CODE_15",
+      "embedUrl": "https://vidmoly.biz/embed-NEW_VID_CODE_15.html",
+      "directUrl": "https://vidmoly.me/NEW_VID_CODE_15.html",
+      "downloadUrl": "https://vidmoly.me/NEW_VID_CODE_15.html"
+    },
+    {
+      "id": "049",
+      "title": "Local Government - Notes",
+      "type": "pdf",
+      "originalType": "PDF",
+      "sourceId": "PDF-15",
+      "lectureNumber": 15,
+      "lectureTopic": "Local Government (Panchayats & Municipalities)",
+      "downloadUrl": "https://files.catbox.moe/placeholder15.pdf",
+      "directUrl": "https://files.catbox.moe/placeholder15.pdf"
+    },
+    {
+      "id": "050",
+      "title": "Local Government - Practice Quiz",
+      "type": "quiz",
+      "originalType": "Quiz (HTML)",
+      "sourceId": "QUIZ-15",
+      "lectureNumber": 15,
+      "lectureTopic": "Local Government (Panchayats & Municipalities)",
+      "quizUrl": "https://files.catbox.moe/placeholder15.html",
+      "downloadUrl": "https://files.catbox.moe/placeholder15.html",
+      "directUrl": "https://files.catbox.moe/placeholder15.html"
     }
   ]
 };
-
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = COURSE_DATA;
-}
