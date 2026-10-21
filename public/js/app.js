@@ -340,7 +340,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // =========================================================================
-  // EMBEDDED VIDEO PLAYER (High-Speed & Reliable Direct Playback)
+  // DEDICATED CUSTOM VIDEO PLAYER
   // =========================================================================
   function openCinemaPlayer(videoItem) {
     state.currentVideoItem = videoItem;
@@ -359,29 +359,16 @@ document.addEventListener('DOMContentLoaded', () => {
     updateModalCompleteButton();
     renderPlayerCompanionMaterials(videoItem);
 
-    // Show loading & patience notice
-    const loader = document.getElementById('videoStageLoader');
-    if (loader) loader.classList.remove('hidden');
-
     // Open Modal
     elements.videoModal.classList.add('active');
     document.body.style.overflow = 'hidden';
 
-    // Set embedded player iframe directly
-    if (elements.videoIframe) {
-      elements.videoIframe.onload = () => {
-        if (loader) loader.classList.add('hidden');
-      };
-      elements.videoIframe.src = videoItem.embedUrl;
+    // Launch Dedicated Cinema Player
+    if (window.CinemaPlayer) {
+      window.CinemaPlayer.open(videoItem);
     }
 
-    // Safety timeout to hide loader once video starts
-    setTimeout(() => {
-      if (loader) loader.classList.add('hidden');
-    }, 3000);
-
-    // Patience toast reminder
-    showToast('The video is loading, please have patience.', 3000);
+    showToast(`Loaded Lecture ${videoItem.lectureNumber}`, 1800);
 
     // Mobile gesture back navigation support
     try {
@@ -447,12 +434,10 @@ document.addEventListener('DOMContentLoaded', () => {
     elements.videoModal.classList.remove('active');
     document.body.style.overflow = '';
     
-    // Clear iframe src immediately to stop audio and video playback
-    if (elements.videoIframe) {
-      elements.videoIframe.src = '';
+    // Stop Cinema Player
+    if (window.CinemaPlayer) {
+      window.CinemaPlayer.close();
     }
-    const loader = document.getElementById('videoStageLoader');
-    if (loader) loader.classList.remove('hidden');
 
     if (!isHistoryBack && history.state && history.state.modalOpen) {
       try { history.back(); } catch (e) {}

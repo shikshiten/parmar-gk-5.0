@@ -1330,7 +1330,8 @@ input, textarea, select {
   color: var(--yellow-primary);
 }
 
-.cp-seek-ripple.show {
+.cp-seek-ripple.show,
+.cp-seek-ripple.animate {
   animation: cpRipple 0.7s ease forwards;
 }
 

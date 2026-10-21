@@ -253,26 +253,135 @@
           </button>
         </div>
 
-        <!-- Embedded Video Stage -->
-        <div class="video-stage-wrapper" id="videoStageWrapper">
+        <!-- =====================================================================
+             CUSTOM YOUTUBE-STYLE HTML5 CINEMA PLAYER
+             ===================================================================== -->
+        <div class="video-stage-wrapper is-paused" id="videoStageWrapper">
+          <video
+            id="videoNative"
+            class="video-native-player"
+            playsinline
+            preload="metadata">
+          </video>
+
           <iframe
             id="videoIframe"
             class="video-iframe-player"
             src=""
-            title="Lecture Video Player"
+            title="Backup Player"
             frameborder="0"
             scrolling="no"
             allowfullscreen
             webkitallowfullscreen="true"
             mozallowfullscreen="true"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen">
+            allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
+            style="display: none;">
           </iframe>
 
-          <!-- Loading & Patience notice -->
-          <div class="video-stage-loader" id="videoStageLoader">
-            <div class="video-loader-spinner"></div>
-            <div class="video-loader-text">Loading video, please have patience...</div>
+          <!-- Center play / buffering layer -->
+          <div class="cp-center-layer" id="cpCenterLayer">
+            <button id="cpBigPlay" class="cp-big-play" aria-label="Play video" type="button">
+              <svg class="cp-ic-play" width="30" height="30" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"></polygon></svg>
+              <svg class="cp-ic-pause" width="30" height="30" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16" rx="1"></rect><rect x="14" y="4" width="4" height="16" rx="1"></rect></svg>
+            </button>
+            <div class="cp-spinner" id="cpSpinner" aria-hidden="true"></div>
           </div>
+
+          <!-- Double-tap seek zones -->
+          <div class="cp-seek-zone cp-seek-left" id="seekLeftZone" aria-hidden="true">
+            <div class="cp-seek-ripple" id="seekLeftBadge">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 5V2L7 6l5 4V7a6 6 0 1 1-6 6H4a8 8 0 1 0 8-8z"></path></svg>
+              <span>10</span>
+            </div>
+          </div>
+          <div class="cp-seek-zone cp-seek-right" id="seekRightZone" aria-hidden="true">
+            <div class="cp-seek-ripple" id="seekRightBadge">
+              <span>10</span>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 5V2l5 4-5 4V7a6 6 0 1 0 6 6h2a8 8 0 1 1-8-8z"></path></svg>
+            </div>
+          </div>
+
+          <!-- Custom YouTube-Style Controls Overlay -->
+          <div class="cp-controls" id="cpControls">
+            <div class="cp-progress" id="cpProgress">
+              <div class="cp-progress-buffer" id="cpBuffer"></div>
+              <div class="cp-progress-played" id="cpPlayed">
+                <span class="cp-progress-thumb" id="cpThumb"></span>
+              </div>
+              <div class="cp-progress-tooltip" id="cpTooltip">0:00</div>
+            </div>
+
+            <div class="cp-row">
+              <button class="cp-btn" id="cpPlayPause" aria-label="Play" type="button">
+                <svg class="cp-ic-play" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"></polygon></svg>
+                <svg class="cp-ic-pause" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16" rx="1"></rect><rect x="14" y="4" width="4" height="16" rx="1"></rect></svg>
+              </button>
+
+              <button class="cp-btn" id="cpRewind" aria-label="Rewind 10 seconds" title="Rewind 10s (J)" type="button">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 5V2L7 6l5 4V7a6 6 0 1 1-6 6H4a8 8 0 1 0 8-8z"></path></svg>
+              </button>
+
+              <button class="cp-btn" id="cpForward" aria-label="Forward 10 seconds" title="Forward 10s (L)" type="button">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 5V2l5 4-5 4V7a6 6 0 1 0 6 6h2a8 8 0 1 1-8-8z"></path></svg>
+              </button>
+
+              <div class="cp-volume">
+                <button class="cp-btn" id="cpMute" aria-label="Mute" title="Mute (M)" type="button">
+                  <svg class="cp-ic-vol-on" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 4V5L7 9H3zm13.5 3a4.5 4.5 0 0 0-2.5-4.03v8.05A4.5 4.5 0 0 0 16.5 12zM14 3.23v2.06a7 7 0 0 1 0 13.42v2.06a9 9 0 0 0 0-17.54z"></path></svg>
+                  <svg class="cp-ic-vol-off" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 4V5L7 9H3zm13.59 3l2.7-2.7-1.42-1.42-2.7 2.7-2.7-2.7-1.42 1.42 2.7 2.7-2.7 2.7 1.42 1.42 2.7-2.7 2.7 2.7 1.42-1.42-2.7-2.7z"></path></svg>
+                </button>
+                <input class="cp-volume-slider" id="cpVolume" type="range" min="0" max="1" step="0.01" value="1" aria-label="Volume">
+              </div>
+
+              <div class="cp-time">
+                <span id="cpCurrent">0:00</span>
+                <span class="cp-time-sep">/</span>
+                <span id="cpDuration">0:00</span>
+              </div>
+
+              <div class="cp-spacer"></div>
+
+              <span class="cp-speed-badge" id="cpSpeedBadge" title="Playback Speed">1x</span>
+
+              <button class="cp-btn cp-settings-btn" id="cpSettings" aria-label="Settings" title="Speed &amp; Quality" type="button">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                <span class="cp-settings-label" id="cpSettingsLabel">1x</span>
+              </button>
+
+              <button class="cp-btn" id="cpPip" aria-label="Picture in picture" title="Picture in picture" type="button">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"></rect><rect x="12" y="12" width="7" height="5" rx="1" fill="currentColor" stroke="none"></rect></svg>
+              </button>
+
+              <button class="cp-btn" id="cpFullscreen" aria-label="Fullscreen" title="Fullscreen (F)" type="button">
+                <svg class="cp-ic-fs-enter" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"></path><path d="M21 8V5a2 2 0 0 0-2-2h-3"></path><path d="M3 16v3a2 2 0 0 0 2 2h3"></path><path d="M16 21h3a2 2 0 0 0 2-2v-3"></path></svg>
+                <svg class="cp-ic-fs-exit" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3v3a2 2 0 0 1-2 2H3"></path><path d="M21 8h-3a2 2 0 0 1-2-2V3"></path><path d="M3 16h3a2 2 0 0 1 2 2v3"></path><path d="M16 21v-3a2 2 0 0 1 2-2h3"></path></svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Speed & Quality Settings Menu -->
+          <div class="cp-menu" id="cpMenu" hidden>
+            <div class="cp-menu-panel" id="cpMenuMain">
+              <button class="cp-menu-row" data-menu="speed" type="button">
+                <span>Playback speed</span>
+                <span class="cp-menu-val" id="cpMenuSpeedVal">Normal</span>
+              </button>
+              <button class="cp-menu-row" data-menu="quality" type="button">
+                <span>Quality</span>
+                <span class="cp-menu-val" id="cpMenuQualityVal">Auto</span>
+              </button>
+            </div>
+            <div class="cp-menu-panel" id="cpMenuSpeed" hidden>
+              <button class="cp-menu-back" data-back type="button">Playback speed</button>
+              <div class="cp-menu-options" id="cpSpeedOptions"></div>
+            </div>
+            <div class="cp-menu-panel" id="cpMenuQuality" hidden>
+              <button class="cp-menu-back" data-back type="button">Quality</button>
+              <div class="cp-menu-options" id="cpQualityOptions"></div>
+            </div>
+          </div>
+
+          <div class="cp-toast" id="cpToast" role="status" aria-live="polite"></div>
         </div>
 
         <!-- Player Body & Information -->
@@ -389,7 +498,9 @@
   <div id="toastNotification" class="toast-notification"></div>
 
   <!-- Scripts -->
+  <script src="vendor/hls.min.js"></script>
   <script src="data/course-data.js"></script>
+  <script src="js/player.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>
