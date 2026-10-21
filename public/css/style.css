@@ -1060,6 +1060,51 @@ input, textarea, select {
   border: none;
   background: #000;
   display: block;
+  z-index: 1;
+}
+
+/* Video Stage Loader & Patience Notice Overlay */
+.video-stage-loader {
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 10, 14, 0.88);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.85rem;
+  z-index: 5;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  pointer-events: none;
+}
+
+.video-stage-loader.hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.video-loader-spinner {
+  width: 44px;
+  height: 44px;
+  border: 3.5px solid rgba(255, 200, 0, 0.2);
+  border-top-color: var(--primary-yellow, #FFC800);
+  border-radius: 50%;
+  animation: videoStageSpin 0.8s linear infinite;
+}
+
+.video-loader-text {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #F3F4F6;
+  letter-spacing: 0.2px;
+  text-align: center;
+  padding: 0 1rem;
+}
+
+@keyframes videoStageSpin {
+  to { transform: rotate(360deg); }
 }
 
 /* Player Body & Information */
@@ -2076,6 +2121,51 @@ input, textarea, select {
   border: none;
   background: #000;
   display: block;
+  z-index: 1;
+}
+
+/* Video Stage Loader & Patience Notice Overlay */
+.video-stage-loader {
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 10, 14, 0.88);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.85rem;
+  z-index: 5;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  pointer-events: none;
+}
+
+.video-stage-loader.hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.video-loader-spinner {
+  width: 44px;
+  height: 44px;
+  border: 3.5px solid rgba(255, 200, 0, 0.2);
+  border-top-color: var(--primary-yellow, #FFC800);
+  border-radius: 50%;
+  animation: videoStageSpin 0.8s linear infinite;
+}
+
+.video-loader-text {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #F3F4F6;
+  letter-spacing: 0.2px;
+  text-align: center;
+  padding: 0 1rem;
+}
+
+@keyframes videoStageSpin {
+  to { transform: rotate(360deg); }
 }
 
 /* ==========================================================================

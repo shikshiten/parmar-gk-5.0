@@ -41,7 +41,6 @@ document.addEventListener('DOMContentLoaded', () => {
     btnPrevVideo: document.getElementById('btnPrevVideo'),
     btnNextVideo: document.getElementById('btnNextVideo'),
     companionList: document.getElementById('companionList'),
-    btnOpenVideoNewTab: document.getElementById('btnOpenVideoNewTab'),
     // Quiz Modal
     quizModal: document.getElementById('quizModal'),
     quizModalClose: document.getElementById('quizModalClose'),
@@ -341,7 +340,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // =========================================================================
-  // CINEMA PLAYER (Dedicated HTML5 / HLS player)
+  // EMBEDDED VIDEO PLAYER (High-Speed & Reliable Direct Playback)
   // =========================================================================
   function openCinemaPlayer(videoItem) {
     state.currentVideoItem = videoItem;
@@ -360,21 +359,29 @@ document.addEventListener('DOMContentLoaded', () => {
     updateModalCompleteButton();
     renderPlayerCompanionMaterials(videoItem);
 
-    // Backup link to the original source
-    if (elements.btnOpenVideoNewTab) {
-      elements.btnOpenVideoNewTab.href = videoItem.directUrl || videoItem.embedUrl;
-    }
+    // Show loading & patience notice
+    const loader = document.getElementById('videoStageLoader');
+    if (loader) loader.classList.remove('hidden');
 
-    // Open Cinema Modal Stage
+    // Open Modal
     elements.videoModal.classList.add('active');
     document.body.style.overflow = 'hidden';
 
-    // Hand-off to the dedicated player (resolves the HLS stream itself)
-    if (window.CinemaPlayer) {
-      window.CinemaPlayer.open(videoItem);
+    // Set embedded player iframe directly
+    if (elements.videoIframe) {
+      elements.videoIframe.onload = () => {
+        if (loader) loader.classList.add('hidden');
+      };
+      elements.videoIframe.src = videoItem.embedUrl;
     }
 
-    showToast(`Loaded Lecture ${videoItem.lectureNumber}`, 2000);
+    // Safety timeout to hide loader once video starts
+    setTimeout(() => {
+      if (loader) loader.classList.add('hidden');
+    }, 3000);
+
+    // Patience toast reminder
+    showToast('The video is loading, please have patience.', 3000);
 
     // Mobile gesture back navigation support
     try {
@@ -439,9 +446,14 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!elements.videoModal || !elements.videoModal.classList.contains('active')) return;
     elements.videoModal.classList.remove('active');
     document.body.style.overflow = '';
-    if (window.CinemaPlayer) {
-      window.CinemaPlayer.close();
+    
+    // Clear iframe src immediately to stop audio and video playback
+    if (elements.videoIframe) {
+      elements.videoIframe.src = '';
     }
+    const loader = document.getElementById('videoStageLoader');
+    if (loader) loader.classList.remove('hidden');
+
     if (!isHistoryBack && history.state && history.state.modalOpen) {
       try { history.back(); } catch (e) {}
     }
@@ -521,14 +533,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // Video Navigation
   elements.btnPrevVideo?.addEventListener('click', () => navigateVideo(-1));
   elements.btnNextVideo?.addEventListener('click', () => navigateVideo(1));
-
-  // Open Video in New Tab (for native speed controls)
-  elements.btnOpenVideoNewTab?.addEventListener('click', (e) => {
-    if (state.currentVideoItem) {
-      // Use directUrl for the native player page with speed controls
-      e.currentTarget.href = state.currentVideoItem.directUrl || state.currentVideoItem.embedUrl;
-    }
-  });
 
   elements.btnToggleCompleteVideo?.addEventListener('click', () => {
     if (state.currentVideoItem) {

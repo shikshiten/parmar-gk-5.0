@@ -239,187 +239,71 @@
   <!-- =========================================================================
        MODAL 1: VIDEO CINEMA PLAYER (HTML5 Player Only)
        ========================================================================= -->
-  <div id="videoModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="videoModalTitle">
-    <div class="modal-container">
-      <div class="modal-header">
-        <div class="modal-header-title-box">
-          <h3 id="videoModalTitle" class="modal-title">Lecture Player</h3>
-        </div>
-        <button id="videoModalClose" class="modal-close-btn" aria-label="Close Cinema Player">✕</button>
-      </div>
-
-      <!-- =====================================================================
-           DEDICATED HTML5 CINEMA PLAYER (YouTube-style controls)
-           ===================================================================== -->
-      <div class="video-stage-wrapper" id="videoStageWrapper">
-        <video
-          id="videoNative"
-          class="video-native-player"
-          playsinline
-          preload="metadata">
-        </video>
-
-        <iframe
-          id="videoIframe"
-          class="video-iframe-player"
-          src=""
-          title="Backup Lecture Player"
-          frameborder="0"
-          scrolling="no"
-          allowfullscreen
-          webkitallowfullscreen="true"
-          mozallowfullscreen="true"
-          allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
-          style="display: none;">
-        </iframe>
-
-        <!-- Center play / buffering layer -->
-        <div class="cp-center-layer" id="cpCenterLayer">
-          <button id="cpBigPlay" class="cp-big-play" aria-label="Play video" type="button">
-            <svg class="cp-ic-play" width="30" height="30" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"></polygon></svg>
-            <svg class="cp-ic-pause" width="30" height="30" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16" rx="1"></rect><rect x="14" y="4" width="4" height="16" rx="1"></rect></svg>
+    <!-- =========================================================================
+         MODAL 1: VIDEO EMBEDDED PLAYER (High-Speed & Reliable)
+         ========================================================================= -->
+    <div id="videoModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="videoModalTitle">
+      <div class="modal-container">
+        <div class="modal-header">
+          <div class="modal-header-title-box">
+            <h3 id="videoModalTitle" class="modal-title">Lecture Player</h3>
+          </div>
+          <button id="videoModalClose" class="modal-close-btn" aria-label="Close Video Player">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
           </button>
-          <div class="cp-spinner" id="cpSpinner" aria-hidden="true"></div>
         </div>
 
-        <!-- Double-tap seek zones -->
-        <div class="cp-seek-zone cp-seek-left" id="seekLeftZone" aria-hidden="true">
-          <div class="cp-seek-ripple" id="seekLeftBadge">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 5V2L7 6l5 4V7a6 6 0 1 1-6 6H4a8 8 0 1 0 8-8z"></path></svg>
-            <span>10</span>
-          </div>
-        </div>
-        <div class="cp-seek-zone cp-seek-right" id="seekRightZone" aria-hidden="true">
-          <div class="cp-seek-ripple" id="seekRightBadge">
-            <span>10</span>
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 5V2l5 4-5 4V7a6 6 0 1 0 6 6h2a8 8 0 1 1-8-8z"></path></svg>
+        <!-- Embedded Video Stage -->
+        <div class="video-stage-wrapper" id="videoStageWrapper">
+          <iframe
+            id="videoIframe"
+            class="video-iframe-player"
+            src=""
+            title="Lecture Video Player"
+            frameborder="0"
+            scrolling="no"
+            allowfullscreen
+            webkitallowfullscreen="true"
+            mozallowfullscreen="true"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen">
+          </iframe>
+
+          <!-- Loading & Patience notice -->
+          <div class="video-stage-loader" id="videoStageLoader">
+            <div class="video-loader-spinner"></div>
+            <div class="video-loader-text">Loading video, please have patience...</div>
           </div>
         </div>
 
-        <!-- Controls -->
-        <div class="cp-controls" id="cpControls">
-          <div class="cp-progress" id="cpProgress">
-            <div class="cp-progress-buffer" id="cpBuffer"></div>
-            <div class="cp-progress-played" id="cpPlayed">
-              <span class="cp-progress-thumb" id="cpThumb"></span>
+        <!-- Player Body & Information -->
+        <div class="player-body">
+          <div class="player-details-row">
+            <div class="player-title-box">
+              <h4 id="playerLectureTitle" class="player-title">Lecture Title</h4>
+              <div id="playerMetaDetails" class="player-meta-subtitle">
+                Topic Details
+              </div>
             </div>
-            <div class="cp-progress-tooltip" id="cpTooltip">0:00</div>
-          </div>
-
-          <div class="cp-row">
-            <button class="cp-btn" id="cpPlayPause" aria-label="Play" type="button">
-              <svg class="cp-ic-play" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"></polygon></svg>
-              <svg class="cp-ic-pause" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16" rx="1"></rect><rect x="14" y="4" width="4" height="16" rx="1"></rect></svg>
-            </button>
-
-            <button class="cp-btn" id="cpRewind" aria-label="Rewind 10 seconds" title="Rewind 10s (J)" type="button">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 5V2L7 6l5 4V7a6 6 0 1 1-6 6H4a8 8 0 1 0 8-8z"></path></svg>
-            </button>
-
-            <button class="cp-btn" id="cpForward" aria-label="Forward 10 seconds" title="Forward 10s (L)" type="button">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 5V2l5 4-5 4V7a6 6 0 1 0 6 6h2a8 8 0 1 1-8-8z"></path></svg>
-            </button>
-
-            <div class="cp-volume">
-              <button class="cp-btn" id="cpMute" aria-label="Mute" title="Mute (M)" type="button">
-                <svg class="cp-ic-vol-on" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 4V5L7 9H3zm13.5 3a4.5 4.5 0 0 0-2.5-4.03v8.05A4.5 4.5 0 0 0 16.5 12zM14 3.23v2.06a7 7 0 0 1 0 13.42v2.06a9 9 0 0 0 0-17.54z"></path></svg>
-                <svg class="cp-ic-vol-off" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 4V5L7 9H3zm13.59 3l2.7-2.7-1.42-1.42-2.7 2.7-2.7-2.7-1.42 1.42 2.7 2.7-2.7 2.7 1.42 1.42 2.7-2.7 2.7 2.7 1.42-1.42-2.7-2.7z"></path></svg>
-              </button>
-              <input class="cp-volume-slider" id="cpVolume" type="range" min="0" max="1" step="0.01" value="1" aria-label="Volume">
-            </div>
-
-            <div class="cp-time">
-              <span id="cpCurrent">0:00</span>
-              <span class="cp-time-sep">/</span>
-              <span id="cpDuration">0:00</span>
-            </div>
-
-            <div class="cp-spacer"></div>
-
-            <span class="cp-speed-badge" id="cpSpeedBadge" title="Current playback speed">1x</span>
-
-            <button class="cp-btn cp-settings-btn" id="cpSettings" aria-label="Playback settings" title="Speed &amp; Quality" type="button">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-              <span class="cp-settings-label" id="cpSettingsLabel">1x</span>
-            </button>
-
-            <button class="cp-btn" id="cpPip" aria-label="Picture in picture" title="Picture in picture" type="button">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"></rect><rect x="12" y="12" width="7" height="5" rx="1" fill="currentColor" stroke="none"></rect></svg>
-            </button>
-
-            <button class="cp-btn" id="cpFullscreen" aria-label="Fullscreen" title="Fullscreen (F)" type="button">
-              <svg class="cp-ic-fs-enter" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"></path><path d="M21 8V5a2 2 0 0 0-2-2h-3"></path><path d="M3 16v3a2 2 0 0 0 2 2h3"></path><path d="M16 21h3a2 2 0 0 0 2-2v-3"></path></svg>
-              <svg class="cp-ic-fs-exit" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3v3a2 2 0 0 1-2 2H3"></path><path d="M21 8h-3a2 2 0 0 1-2-2V3"></path><path d="M3 16h3a2 2 0 0 1 2 2v3"></path><path d="M16 21v-3a2 2 0 0 1 2-2h3"></path></svg>
-            </button>
-          </div>
-        </div>
-
-        <!-- Settings menu (speed + quality) -->
-        <div class="cp-menu" id="cpMenu" hidden>
-          <div class="cp-menu-panel" id="cpMenuMain">
-            <button class="cp-menu-row" data-menu="speed" type="button">
-              <span>Playback speed</span>
-              <span class="cp-menu-val" id="cpMenuSpeedVal">1x</span>
-            </button>
-            <button class="cp-menu-row" data-menu="quality" type="button">
-              <span>Quality</span>
-              <span class="cp-menu-val" id="cpMenuQualityVal">Auto</span>
-            </button>
-          </div>
-          <div class="cp-menu-panel" id="cpMenuSpeed" hidden>
-            <button class="cp-menu-back" data-back type="button">Playback speed</button>
-            <div class="cp-menu-options" id="cpSpeedOptions"></div>
-          </div>
-          <div class="cp-menu-panel" id="cpMenuQuality" hidden>
-            <button class="cp-menu-back" data-back type="button">Quality</button>
-            <div class="cp-menu-options" id="cpQualityOptions"></div>
-          </div>
-        </div>
-
-        <div class="cp-toast" id="cpToast" role="status" aria-live="polite"></div>
-
-        <div class="cp-error" id="cpError" hidden>
-          <div class="cp-error-title">Playback unavailable</div>
-          <div class="cp-error-text" id="cpErrorText">Switching to the backup player…</div>
-        </div>
-      </div>
-
-      <!-- Player Body & Information -->
-      <div class="player-body">
-        <div class="player-details-row">
-          <div class="player-title-box">
-            <h4 id="playerLectureTitle" class="player-title">Lecture Title</h4>
-            <div id="playerMetaDetails" class="player-meta-subtitle">
-              Topic Details
+            <!-- Compact Professional Action Buttons -->
+            <div class="player-links-row">
+              <button id="btnPrevVideo" class="btn-player-mini" title="Previous Lecture">Prev</button>
+              <button id="btnNextVideo" class="btn-player-mini" title="Next Lecture">Next</button>
+              <button id="btnToggleCompleteVideo" class="btn-player-mini primary">Mark Complete</button>
             </div>
           </div>
-          <!-- Compact Professional Action Buttons -->
-          <div class="player-links-row">
-            <button id="btnPrevVideo" class="btn-player-mini" title="Previous Lecture">Prev</button>
-            <button id="btnNextVideo" class="btn-player-mini" title="Next Lecture">Next</button>
 
-            <!-- Backup: open the original source in a new tab -->
-            <a id="btnOpenVideoNewTab" class="btn-player-mini" target="_blank" rel="noopener noreferrer" title="Open original source in a new tab">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
-              <span>Open Tab</span>
-            </a>
-
-            <button id="btnToggleCompleteVideo" class="btn-player-mini primary">Mark Complete</button>
-          </div>
-        </div>
-
-        <!-- Accompanying Materials in this Lecture -->
-        <div class="player-companion-card">
-          <div class="companion-title">
-            Attached Lecture Notes & Quizzes
-          </div>
-          <div id="companionList" class="companion-grid">
-            <!-- Populated dynamically -->
+          <!-- Accompanying Materials in this Lecture -->
+          <div class="player-companion-card">
+            <div class="companion-title">
+              Attached Lecture Notes &amp; Quizzes
+            </div>
+            <div id="companionList" class="companion-grid">
+              <!-- Populated dynamically -->
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
 
   <!-- =========================================================================
        MODAL 2: CHAPTER PRACTICE QUIZ RUNNER
@@ -505,9 +389,7 @@
   <div id="toastNotification" class="toast-notification"></div>
 
   <!-- Scripts -->
-  <script src="vendor/hls.min.js"></script>
   <script src="data/course-data.js"></script>
-  <script src="js/player.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>
