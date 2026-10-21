@@ -1,12 +1,12 @@
-const CACHE_NAME = 'parmar-gk-5-cache-v14';
+const CACHE_NAME = 'parmar-gk-5-cache-v15';
 const STATIC_ASSETS = [
   './',
   './index.html',
   './css/style.css',
-  './js/app.js',
-  './js/player.js',
+  './js/app.js?v=2.4',
+  './js/player.js?v=2.4',
   './vendor/hls.min.js',
-  './data/course-data.js',
+  './data/course-data.js?v=2.4',
   './data/course-data.json',
   './manifest.json',
   './assets/course-thumbnail.jpg',
