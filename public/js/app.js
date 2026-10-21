@@ -41,6 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
     btnPrevVideo: document.getElementById('btnPrevVideo'),
     btnNextVideo: document.getElementById('btnNextVideo'),
     companionList: document.getElementById('companionList'),
+    btnOpenVideoNewTab: document.getElementById('btnOpenVideoNewTab'),
     // Quiz Modal
     quizModal: document.getElementById('quizModal'),
     quizModalClose: document.getElementById('quizModalClose'),
@@ -340,7 +341,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // =========================================================================
-  // CINEMA PLAYER (Embedded Video Player)
+  // CINEMA PLAYER (Dedicated HTML5 / HLS player)
   // =========================================================================
   function openCinemaPlayer(videoItem) {
     state.currentVideoItem = videoItem;
@@ -359,14 +360,20 @@ document.addEventListener('DOMContentLoaded', () => {
     updateModalCompleteButton();
     renderPlayerCompanionMaterials(videoItem);
 
-    // Set embedded player src
-    if (elements.videoIframe) {
-      elements.videoIframe.src = videoItem.embedUrl;
+    // Backup link to the original source
+    if (elements.btnOpenVideoNewTab) {
+      elements.btnOpenVideoNewTab.href = videoItem.directUrl || videoItem.embedUrl;
     }
 
     // Open Cinema Modal Stage
     elements.videoModal.classList.add('active');
     document.body.style.overflow = 'hidden';
+
+    // Hand-off to the dedicated player (resolves the HLS stream itself)
+    if (window.CinemaPlayer) {
+      window.CinemaPlayer.open(videoItem);
+    }
+
     showToast(`Loaded Lecture ${videoItem.lectureNumber}`, 2000);
 
     // Mobile gesture back navigation support
@@ -432,8 +439,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!elements.videoModal || !elements.videoModal.classList.contains('active')) return;
     elements.videoModal.classList.remove('active');
     document.body.style.overflow = '';
-    if (elements.videoIframe) {
-      elements.videoIframe.src = '';
+    if (window.CinemaPlayer) {
+      window.CinemaPlayer.close();
     }
     if (!isHistoryBack && history.state && history.state.modalOpen) {
       try { history.back(); } catch (e) {}
@@ -514,6 +521,14 @@ document.addEventListener('DOMContentLoaded', () => {
   // Video Navigation
   elements.btnPrevVideo?.addEventListener('click', () => navigateVideo(-1));
   elements.btnNextVideo?.addEventListener('click', () => navigateVideo(1));
+
+  // Open Video in New Tab (for native speed controls)
+  elements.btnOpenVideoNewTab?.addEventListener('click', (e) => {
+    if (state.currentVideoItem) {
+      // Use directUrl for the native player page with speed controls
+      e.currentTarget.href = state.currentVideoItem.directUrl || state.currentVideoItem.embedUrl;
+    }
+  });
 
   elements.btnToggleCompleteVideo?.addEventListener('click', () => {
     if (state.currentVideoItem) {
@@ -699,32 +714,36 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Keyboard Shortcuts
+  // Keyboard Shortcuts (player-specific keys live in js/player.js)
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
+      // Let the browser leave fullscreen first instead of closing the modal.
+      if (document.fullscreenElement) return;
       closeCinemaPlayer();
       closeQuizModal();
-      closeVideoLoadingModal();
       if (!isWaGateActive) closeWhatsappModal();
     }
+
     if (elements.videoModal.classList.contains('active')) {
-      if (e.key === 'ArrowRight' && !e.target.matches('input, textarea')) {
+      if (e.target.matches('input, textarea, select')) return;
+      if (e.key === 'n' || e.key === 'N') {
         navigateVideo(1);
-      } else if (e.key === 'ArrowLeft' && !e.target.matches('input, textarea')) {
+      } else if (e.key === 'p' || e.key === 'P') {
         navigateVideo(-1);
       }
     }
   });
 
-  // Native Video Player Ended -> Auto Advance
-  elements.videoNative?.addEventListener('ended', () => {
-    showToast('Video completed. Playing next lecture...');
+  // Native video finished -> mark complete and auto-advance
+  document.addEventListener('cinema:ended', () => {
+    showToast('Video completed. Playing next lecture...', 2200);
     if (state.currentVideoItem) {
       state.completedIds.add(state.currentVideoItem.id);
       localStorage.setItem('parmar_gk_completed_items', JSON.stringify(Array.from(state.completedIds)));
+      updateModalCompleteButton();
       renderContent();
     }
-    setTimeout(() => navigateVideo(1), 1200);
+    setTimeout(() => navigateVideo(1), 1400);
   });
 
   // =========================================================================

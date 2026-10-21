@@ -19,6 +19,8 @@
   Cache-Control: public, max-age=86400
 /js/*
   Cache-Control: public, max-age=86400
+/vendor/*
+  Cache-Control: public, max-age=604800
 
 # Images and Icons
 /assets/*
