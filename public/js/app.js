@@ -777,7 +777,32 @@ document.addEventListener('DOMContentLoaded', () => {
     showToast('Connection Restored');
   });
 
+  // Update Header & Pill Statistics dynamically
+  function updateHeaderAndPillStats() {
+    if (!state.course || !state.course.stats) return;
+    const stats = state.course.stats;
+    const total = state.course.totalItems || (state.course.allItems ? state.course.allItems.length : 0);
+
+    const statBoxes = document.querySelectorAll('.hero-stats-row .stat-box .stat-number');
+    if (statBoxes.length >= 4) {
+      statBoxes[0].textContent = stats.videos;
+      statBoxes[1].textContent = stats.pdfs;
+      statBoxes[2].textContent = stats.quizzes;
+      statBoxes[3].textContent = total;
+    }
+
+    const pillAll = document.querySelector('.filter-pill[data-filter="all"] .pill-count');
+    if (pillAll) pillAll.textContent = total;
+    const pillVideo = document.querySelector('.filter-pill[data-filter="video"] .pill-count');
+    if (pillVideo) pillVideo.textContent = stats.videos;
+    const pillPdf = document.querySelector('.filter-pill[data-filter="pdf"] .pill-count');
+    if (pillPdf) pillPdf.textContent = stats.pdfs;
+    const pillQuiz = document.querySelector('.filter-pill[data-filter="quiz"] .pill-count');
+    if (pillQuiz) pillQuiz.textContent = stats.quizzes;
+  }
+
   // Initial Content Render
+  updateHeaderAndPillStats();
   renderContent();
   console.log('𝑷𝑨𝑹𝑴𝑨𝑹\'𝑺 𝑮𝑲 𝟓.𝟎 𝑻𝑶𝑷𝑷𝑬𝑹𝑺 𝑩𝑨𝑻𝑪𝑯 - Web App Initialized (V2.2).');
 });
